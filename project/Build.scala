@@ -10,6 +10,9 @@ object Build extends sbt.Build
 
     lazy val asteriskScala = project.in(file(".")).
         settings(name := "asterisk-scala").
-        settings(buildSettings: _*)
+        aggregate(agi)
 
+    lazy val agi = project.in(file("agi")).
+        settings(name := "agi").
+        settings(buildSettings: _*)
 }
