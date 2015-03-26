@@ -1,8 +1,10 @@
 package com.github.bespalovdn.asteriskscala.logging.impl
 
+import com.github.bespalovdn.asteriskscala.logging.Logger
 import org.apache.log4j.{Logger => L4jLogger, NDC, Level}
 
-class LoggerImpl(clazz: Class[_], tag: String)
+private [logging]
+class LoggerImpl(clazz: Class[_], tag: String) extends Logger
 {
     def isTraceEnabled: Boolean = logger.isTraceEnabled
     def isDebugEnabled: Boolean = logger.isDebugEnabled
