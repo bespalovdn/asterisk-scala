@@ -13,7 +13,7 @@ object ChannelLogger{
 
 private class ChannelLogger[T](override val provider: ChannelHandlerContextProvider)
                               (implicit classTag: ClassTag[T])
-    extends ChannelLoggerTrait
+    extends ChannelLoggerSupport
 {
     override protected[logging] def logTag(chan: Channel): String = "(" + chan.hashCode().toString + ")"
 

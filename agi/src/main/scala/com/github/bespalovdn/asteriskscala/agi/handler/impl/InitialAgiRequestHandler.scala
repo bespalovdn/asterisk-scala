@@ -1,6 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.handler.impl
 
-import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerTrait
+import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
@@ -9,12 +9,12 @@ private [handler]
 abstract class InitialAgiRequestHandler extends SimpleChannelInboundHandler[AgiRequest]
 {
     def contextHolder: ChannelHandlerContextHolder
-    def loggerTrait: ChannelLoggerTrait
+    def loggerTrait: ChannelLoggerSupport
 
     def agiRequestHandlerImpl: AgiRequestHandler
 
     override def channelActive(ctx: ChannelHandlerContext): Unit = {
-        contextHolder._context = ctx
+        contextHolder.setContext(ctx)
         super.channelActive(ctx)
     }
 

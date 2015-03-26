@@ -4,7 +4,7 @@ import com.github.bespalovdn.asteriskscala.common.logging.impl.LoggerImpl
 
 import scala.reflect.ClassTag
 
-trait LoggerTrait
+trait LoggerSupport
 {
     def logger: Logger = {
         val (id, l) = _logger

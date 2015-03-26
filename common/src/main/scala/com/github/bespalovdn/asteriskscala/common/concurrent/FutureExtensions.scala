@@ -2,7 +2,7 @@ package com.github.bespalovdn.asteriskscala.common.concurrent
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
-trait FutureTraits
+trait FutureExtensions
 {
     implicit class FutureBuilder[A](value: A)
     {

@@ -1,17 +1,17 @@
 package com.github.bespalovdn.asteriskscala.agi.handler
 
-import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerTrait
+import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl.{ChannelHandlerContextHolder, InitialAgiRequestHandler, InitialAgiRequestHandlerFactory, PipelineBuilder}
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.common.concurrent.FutureTraits
+import com.github.bespalovdn.asteriskscala.common.concurrent.FutureExtensions
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
 import scala.concurrent.Future
 
 abstract class AgiRequestHandler (channel: Channel)//TODO: maybe better to move this value out of list of input params?
     extends ChannelHandlerContextProvider
-    with ChannelLoggerTrait
-    with FutureTraits
+    with ChannelLoggerSupport
+    with FutureExtensions
 {
     self =>
 
@@ -33,7 +33,7 @@ abstract class AgiRequestHandler (channel: Channel)//TODO: maybe better to move 
         override def createAgiRequestHandler() = new InitialAgiRequestHandler{
             override def agiRequestHandlerImpl: AgiRequestHandler = self
             override def contextHolder: ChannelHandlerContextHolder = self.impl
-            override def loggerTrait: ChannelLoggerTrait = self
+            override def loggerTrait: ChannelLoggerSupport = self
         }
     }
 }

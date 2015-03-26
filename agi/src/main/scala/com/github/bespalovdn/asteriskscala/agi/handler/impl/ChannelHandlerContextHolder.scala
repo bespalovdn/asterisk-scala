@@ -6,7 +6,8 @@ import io.netty.channel.ChannelHandlerContext
 private [handler]
 trait ChannelHandlerContextHolder extends ChannelHandlerContextProvider
 {
-    var _context: ChannelHandlerContext = null
-
     override def context: ChannelHandlerContext = _context
+    def setContext(context: ChannelHandlerContext): Unit = _context = context
+
+    private var _context: ChannelHandlerContext = null
 }
