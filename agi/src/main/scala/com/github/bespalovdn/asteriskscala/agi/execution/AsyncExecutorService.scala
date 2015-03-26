@@ -6,11 +6,11 @@ import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
 
 import scala.concurrent.ExecutionContext
 
-object AgiExecutorService extends LoggerSupport
+object AsyncExecutorService extends LoggerSupport
 {
     lazy val context: ExecutionContext = new ExecutionContext {
-        override def reportFailure(t: Throwable): Unit = AgiExecutorService.reporter(t)
-        override def execute(runnable: Runnable): Unit = AgiExecutorService.service.execute(runnable)
+        override def reportFailure(t: Throwable): Unit = AsyncExecutorService.reporter(t)
+        override def execute(runnable: Runnable): Unit = AsyncExecutorService.service.execute(runnable)
     }
 
     lazy val service: ExecutorService =

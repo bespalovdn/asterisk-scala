@@ -1,12 +1,14 @@
 package com.github.bespalovdn.asteriskscala.agi.handler.impl
 
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]
 abstract class InitialAgiRequestHandler extends SimpleChannelInboundHandler[AgiRequest]
+    with AsyncActionSupport
 {
     def contextHolder: ChannelHandlerContextHolder
     def loggerTrait: ChannelLoggerSupport
