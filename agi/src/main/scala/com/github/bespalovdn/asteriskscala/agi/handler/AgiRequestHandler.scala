@@ -1,9 +1,9 @@
 package com.github.bespalovdn.asteriskscala.agi.handler
 
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl.{ChannelHandlerContextHolder, InitialAgiRequestHandler, InitialAgiRequestHandlerFactory, PipelineBuilder}
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.common.concurrent.FutureExtensions
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
 import scala.concurrent.Future
@@ -11,7 +11,7 @@ import scala.concurrent.Future
 abstract class AgiRequestHandler (channel: Channel)//TODO: maybe better to move this value out of list of input params?
     extends ChannelHandlerContextProvider
     with ChannelLoggerSupport
-    with FutureExtensions
+    with AsyncActionSupport
 {
     self =>
 
