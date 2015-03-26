@@ -1,7 +1,7 @@
-package com.github.bespalovdn.asteriskscala.logging.impl
+package com.github.bespalovdn.asteriskscala.common.logging.impl
 
-import com.github.bespalovdn.asteriskscala.logging.Logger
-import org.apache.log4j.{Logger => L4jLogger, NDC, Level}
+import com.github.bespalovdn.asteriskscala.common.logging.Logger
+import org.apache.log4j.{Level, Logger => L4jLogger, NDC}
 
 private [logging]
 class LoggerImpl(clazz: Class[_], tag: String) extends Logger

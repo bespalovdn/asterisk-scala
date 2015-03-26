@@ -17,10 +17,10 @@ object Build extends sbt.Build
         settings(buildSettings: _*).
         settings(libraryDependencies ++= dependency.common ++ Seq(
             dependency.netty)).
-        dependsOn(logging)
+        dependsOn(common)
 
-    lazy val logging = project.in(file("logging")).
-        settings(name := "logging").
+    lazy val common = project.in(file("common")).
+        settings(name := "common").
         settings(buildSettings: _*).
         settings(libraryDependencies ++= dependency.common)
 

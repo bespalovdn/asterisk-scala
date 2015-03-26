@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.channel.logging
 
 import com.github.bespalovdn.asteriskscala.agi.handler.ChannelHandlerContextProvider
-import com.github.bespalovdn.asteriskscala.logging.LoggerTrait
+import com.github.bespalovdn.asteriskscala.common.logging.LoggerTrait
 import io.netty.channel.Channel
 
 trait ChannelLoggerTrait extends LoggerTrait

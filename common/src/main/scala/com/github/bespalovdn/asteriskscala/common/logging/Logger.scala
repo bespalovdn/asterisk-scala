@@ -1,4 +1,4 @@
-package com.github.bespalovdn.asteriskscala.logging
+package com.github.bespalovdn.asteriskscala.common.logging
 
 import org.apache.log4j.Level
 

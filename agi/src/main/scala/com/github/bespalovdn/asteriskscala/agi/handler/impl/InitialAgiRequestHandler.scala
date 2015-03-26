@@ -6,22 +6,23 @@ import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]
-trait InitialAgiRequestHandler extends SimpleChannelInboundHandler[AgiRequest]
+abstract class InitialAgiRequestHandler extends SimpleChannelInboundHandler[AgiRequest]
 {
-    this: ChannelHandlerContextHolder with ChannelLoggerTrait =>
+    def contextHolder: ChannelHandlerContextHolder
+    def loggerTrait: ChannelLoggerTrait
 
     def agiRequestHandlerImpl: AgiRequestHandler
 
     override def channelActive(ctx: ChannelHandlerContext): Unit = {
-        _context = ctx
+        contextHolder._context = ctx
         super.channelActive(ctx)
     }
 
     override def channelRead0(ctx: ChannelHandlerContext, request: AgiRequest): Unit = {
-        logger.info("Received AGI request: " + request)
+        loggerTrait.logger.info("Received AGI request: " + request)
         agiRequestHandlerImpl.handle(request).
             recoverWith(agiRequestHandlerImpl.recovery).
-            onComplete{case _ => context.close(); logger.info("Done.")}
+            onComplete{case _ => contextHolder.context.close(); loggerTrait.logger.info("Done.")}
     }
 }
 

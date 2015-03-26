@@ -1,6 +1,6 @@
-package com.github.bespalovdn.asteriskscala.logging
+package com.github.bespalovdn.asteriskscala.common.logging
 
-import com.github.bespalovdn.asteriskscala.logging.impl.LoggerImpl
+import com.github.bespalovdn.asteriskscala.common.logging.impl.LoggerImpl
 
 import scala.reflect.ClassTag
 
