@@ -8,7 +8,7 @@ import io.netty.channel.{Channel, ChannelHandlerContext}
 
 import scala.concurrent.Future
 
-abstract class AgiRequestHandler (channel: Channel)//TODO: maybe better to move this value out of list of input params?
+trait AgiRequestHandler
     extends ChannelHandlerContextProvider
     with ChannelLoggerSupport
     with AsyncActionSupport
@@ -21,8 +21,9 @@ abstract class AgiRequestHandler (channel: Channel)//TODO: maybe better to move 
         case err: Throwable => logger.warn("Unhandled error: " + err.getMessage, err).toFuture
     }
 
-    // build the pipeline:
-    impl.buildPipeline(channel.pipeline())
+    def initializeChannel(channel: Channel) {
+        impl.buildPipeline(channel.pipeline())
+    }
 
     override def context: ChannelHandlerContext = impl.context
 
