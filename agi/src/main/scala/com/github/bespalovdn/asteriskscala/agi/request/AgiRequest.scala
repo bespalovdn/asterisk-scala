@@ -158,10 +158,11 @@ object AgiRequest
 
     private def toKeyValue(line: String): (String, String) = line match {
         case null => null
-        case _ => parser.parse(line)
+        case _ => lineParser.parse(line)
     }
 
-    private object parser extends RegexParsers
+    //TODO: required UT for this parser
+    private object lineParser extends RegexParsers
     {
         override def skipWhitespace: Boolean = false
 
@@ -170,7 +171,7 @@ object AgiRequest
             case NoSuccess(_, _) => null
         }
 
-        private def lineParser: Parser[(String, String)] = ("agi_" | "ogi_") ~ keyParser ~ ": " ~ valueParser ~ "\n" ^^ {
+        private def lineParser: Parser[(String, String)] = "agi_" ~ keyParser ~ ": " ~ valueParser ~ "\n" ^^ {
             case _ ~ k ~ _ ~ v ~ _ => (k, v)
         }
 
