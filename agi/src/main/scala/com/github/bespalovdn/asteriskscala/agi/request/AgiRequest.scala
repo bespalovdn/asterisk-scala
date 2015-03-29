@@ -1,5 +1,9 @@
 package com.github.bespalovdn.asteriskscala.agi.request
 
+import com.github.bespalovdn.asteriskscala.agi.request.impl.AgiRequestImpl
+
+import scala.util.parsing.combinator.RegexParsers
+
 trait AgiRequest
 {
     /**
@@ -144,5 +148,33 @@ trait AgiRequest
 private [agi]
 object AgiRequest
 {
-    def apply(lines: Seq[String]): AgiRequest = ???
+    def apply(lines: Seq[String]): AgiRequest = {
+        val source = toMap(lines)
+        new AgiRequestImpl(source)
+    }
+
+    private def toMap(lines: Seq[String]): Map[String, String] =
+        lines.map(toKeyValue).filter(_ != null).toMap
+
+    private def toKeyValue(line: String): (String, String) = line match {
+        case null => null
+        case _ => parser.parse(line)
+    }
+
+    private object parser extends RegexParsers
+    {
+        override def skipWhitespace: Boolean = false
+
+        def parse(line: String): (String, String) = parseAll(lineParser, line) match {
+            case Success(a, _) => a
+            case NoSuccess(_, _) => null
+        }
+
+        private def lineParser: Parser[(String, String)] = ("agi_" | "ogi_") ~ keyParser ~ ": " ~ valueParser ~ "\n" ^^ {
+            case _ ~ k ~ _ ~ v ~ _ => (k, v)
+        }
+
+        private def keyParser: Parser[String] = """[^:]+""".r
+        private def valueParser: Parser[String] = """[^\n]+""".r
+    }
 }
