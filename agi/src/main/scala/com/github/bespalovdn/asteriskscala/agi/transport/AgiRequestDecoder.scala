@@ -21,3 +21,8 @@ class AgiRequestDecoder extends MessageToMessageDecoder[String]
 
     private val buffer = ArrayBuffer.empty[String]
 }
+
+object AgiRequestDecoder
+{
+    def channelHandlerName = AgiRequestDecoder.getClass.getSimpleName
+}
