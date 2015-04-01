@@ -161,8 +161,8 @@ object AgiRequest
         case _ => lineParser.parse(line)
     }
 
-    //TODO: required UT for this parser
-    private object lineParser extends RegexParsers
+    private [request]
+    object lineParser extends RegexParsers
     {
         override def skipWhitespace: Boolean = false
 
