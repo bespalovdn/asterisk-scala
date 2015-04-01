@@ -12,15 +12,17 @@ trait PipelineBuilder
     def buildPipeline(pipe: ChannelPipeline): Unit = new Builder {
         override def addDecoders(pipe: ChannelPipeline): Unit = {
             super.addDecoders(pipe)
-            pipe.addLast(AgiRequestDecoder.channelHandlerName, new AgiRequestDecoder) //TODO: remove it after get the request
-            //TODO: add AgiCommandResponseDecoder
+            pipe.addLast(AgiRequestDecoder.channelHandlerName, new AgiRequestDecoder)
+            // NOTE: AgiCommandResponseDecoder will be added later by AgiRequestChannelHandler -
+            //       just after AgiRequest received.
         }
 
         override def addEncoders(pipe: ChannelPipeline): Unit = {
             super.addEncoders(pipe)
-            //TODO: add encoders here
+            ??? //TODO: add encoders here
         }
 
         override def addHandlers(pipe: ChannelPipeline): Unit = pipe.addLast(newAgiRequestChannelHandler())
     }.build(pipe)
+
 }
