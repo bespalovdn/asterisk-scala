@@ -142,7 +142,7 @@ trait AgiRequest
      * Returns `true` if started as an EAGI script, `false` otherwise.
      * @return `true` if started as an EAGI script, `false` otherwise.
      */
-    def isEnhanced: Boolean
+    def isEnhancedAgi: Boolean
 }
 
 private [agi]
