@@ -2,7 +2,7 @@ package com.github.bespalovdn.asteriskscala.agi.handler
 
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
-import com.github.bespalovdn.asteriskscala.agi.handler.impl.{ChannelHandlerContextHolder, InitialAgiRequestHandler, InitialAgiRequestHandlerFactory, PipelineBuilder}
+import com.github.bespalovdn.asteriskscala.agi.handler.impl.{AgiRequestChannelHandler, AgiRequestChannelHandlerFactory, ChannelHandlerContextHolder, PipelineBuilder}
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
@@ -28,10 +28,10 @@ trait AgiRequestHandler
     override def context: ChannelHandlerContext = impl.context
 
     private object impl extends ChannelHandlerContextHolder
-        with InitialAgiRequestHandlerFactory
+        with AgiRequestChannelHandlerFactory
         with PipelineBuilder
     {
-        override def createAgiRequestHandler() = new InitialAgiRequestHandler{
+        override def newAgiRequestChannelHandler() = new AgiRequestChannelHandler{
             override def agiRequestHandlerImpl: AgiRequestHandler = self
             override def contextHolder: ChannelHandlerContextHolder = self.impl
             override def loggerTrait: ChannelLoggerSupport = self

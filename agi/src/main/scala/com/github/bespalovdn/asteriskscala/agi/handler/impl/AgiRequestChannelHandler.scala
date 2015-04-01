@@ -7,7 +7,7 @@ import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]
-abstract class InitialAgiRequestHandler extends SimpleChannelInboundHandler[AgiRequest]
+abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiRequest]
     with AsyncActionSupport
 {
     def contextHolder: ChannelHandlerContextHolder
@@ -29,7 +29,7 @@ abstract class InitialAgiRequestHandler extends SimpleChannelInboundHandler[AgiR
 }
 
 private [handler]
-trait InitialAgiRequestHandlerFactory
+trait AgiRequestChannelHandlerFactory
 {
-    def createAgiRequestHandler(): InitialAgiRequestHandler
+    def newAgiRequestChannelHandler(): AgiRequestChannelHandler
 }
