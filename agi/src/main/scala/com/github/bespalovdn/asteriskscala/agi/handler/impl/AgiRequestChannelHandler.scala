@@ -4,7 +4,7 @@ import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupp
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.agi.transport.AgiRequestDecoder
+import com.github.bespalovdn.asteriskscala.agi.transport.{AgiCommandResponseDecoder, AgiRequestDecoder}
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]
@@ -34,7 +34,7 @@ abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiR
         // 2. remove AgiRequestDecoder
         val pipe = contextHolder.context.pipeline()
         pipe.addBefore(AgiRequestDecoder.channelHandlerName,
-            AgiCommandResponseDecoder.channelHandlerName, new AgiCommandResponseDecoder())
+            AgiCommandResponseDecoder.channelHandlerName, AgiCommandResponseDecoder)
         pipe.remove(AgiRequestDecoder.channelHandlerName)
 
     }
