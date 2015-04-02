@@ -8,16 +8,17 @@ trait ChannelLoggerSupport extends LoggerSupport
 {
     def provider: ChannelHandlerContextProvider
 
-    override protected def logTag: String = {
+    override def loggerTag: String = {
         val channel = for (
             context <- Option(provider.context);
             channel <- Option(context.channel)
         ) yield channel
         channel match {
-            case Some(chan) => logTag(chan)
-            case None => super.logTag
+            case Some(chan) => loggerTag(chan)
+            case None => super.loggerTag
         }
     }
 
-    protected [logging] def logTag(chan: Channel): String = super.logTag + "(" + chan.hashCode().toString + ")"
+    protected [logging] def loggerTag(chan: Channel): String =
+        super.loggerTag + "(" + chan.hashCode().toString + ")"
 }

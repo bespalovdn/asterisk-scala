@@ -6,23 +6,13 @@ import scala.reflect.ClassTag
 
 trait LoggerSupport
 {
-    def logger: Logger = {
-        val (id, l) = _logger
-        if(id == logTag) l
-        else{
-            _logger = (logTag, createLogger(defaultLoggerClass, logTag))
-            _logger._2
-        }
-    }
+    def logger: Logger = createLogger(loggerClass)
 
-    def loggerType[A](implicit classTag: ClassTag[A]): Logger = createLogger(classTag.runtimeClass, logTag)
+    def loggerType[A](implicit classTag: ClassTag[A]): Logger = createLogger(classTag.runtimeClass)
 
-    protected def defaultLoggerClass: Class[_] = getClass
+    def loggerClass: Class[_] = getClass
 
-    protected def logTag: String = _logTag
+    def loggerTag: String = hashCode().toString
 
-    private def createLogger(clazz: Class[_], tag: String): Logger = new LoggerImpl(clazz, tag)
-
-    private var _logger: (String, Logger) = (null, null)
-    private lazy val _logTag = hashCode().toString
+    private def createLogger(clazz: Class[_]) = new LoggerImpl(clazz, loggerTag)
 }
