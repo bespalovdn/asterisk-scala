@@ -9,7 +9,7 @@ trait FutureExtensions
         def toFuture: Future[A] = Promise.successful(value).future
     }
 
-    implicit class FutureOps[A](f: Future[A])(implicit executorContext: ExecutionContext)
+    implicit class FutureOps[A](f: Future[A])(implicit context: ExecutionContext)
     {
         def >>= [B](handler: A => Future[B]): Future[B] = f flatMap handler
         def >> [B](handler: => Future[B]): Future[B] = f flatMap {_ => handler}
