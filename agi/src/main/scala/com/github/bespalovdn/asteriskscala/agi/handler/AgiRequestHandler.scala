@@ -6,7 +6,7 @@ import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.agi.response.AgiResponse
+import com.github.bespalovdn.asteriskscala.agi.response.SuccessResponse
 import com.github.bespalovdn.asteriskscala.common.logging.Logger
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
@@ -22,7 +22,7 @@ trait AgiRequestHandler
 
     def handle(request: AgiRequest): Future[Unit]
 
-    override def send(command: AgiCommand): Future[AgiResponse] = impl.agiCommandResponseChannelHandler.send(command)
+    override def send(command: AgiCommand): Future[SuccessResponse] = impl.agiCommandResponseChannelHandler.send(command)
 
     def recovery: PartialFunction[Throwable, Future[Unit]] = {
         case err: Throwable => logger.warn("Unhandled error: " + err.getMessage, err).toFuture

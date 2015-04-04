@@ -1,9 +1,9 @@
 package com.github.bespalovdn.asteriskscala.agi.response.impl
 
-import com.github.bespalovdn.asteriskscala.agi.response.AgiResponse
+import com.github.bespalovdn.asteriskscala.agi.response.SuccessResponse
 
 private [response]
-trait CustomAgiResponse extends AgiResponse
+trait CustomAgiResponse extends SuccessResponse
 {
     override def response: String = toString
 }
