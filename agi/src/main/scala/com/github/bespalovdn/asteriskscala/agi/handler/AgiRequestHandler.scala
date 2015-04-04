@@ -1,5 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.handler
 
+import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
@@ -39,9 +40,10 @@ trait AgiRequestHandler
         with PipelineBuilderFactory
     {
         override lazy val agiRequestChannelHandler = new AgiRequestChannelHandler {
+            override def logger: Logger = self.logger
             override def agiRequestHandlerImpl: AgiRequestHandler = self
             override def contextHolder: ChannelHandlerContextHolder = self.impl
-            override def logger: Logger = self.logger
+            override def interactionBuilder: PipelineBuilder = impl.interactionBuilder
         }
 
         override lazy val agiCommandResponseChannelHandler = new AgiCommandResponseChannelHandler{

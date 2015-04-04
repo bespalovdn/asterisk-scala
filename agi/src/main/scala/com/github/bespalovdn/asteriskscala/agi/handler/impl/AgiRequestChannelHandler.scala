@@ -1,5 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.handler.impl
 
+import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
@@ -11,11 +12,9 @@ abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiR
     with AsyncActionSupport
     with LoggerProvider
 {
-    this: PipelineBuilderFactory =>
-
     def contextHolder: ChannelHandlerContextHolder
-
     def agiRequestHandlerImpl: AgiRequestHandler
+    def interactionBuilder: PipelineBuilder
 
     override def channelActive(ctx: ChannelHandlerContext): Unit = {
         contextHolder.setContext(ctx)
