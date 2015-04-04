@@ -13,7 +13,7 @@ class GetVariableCommand(variable: String) extends AgiCommand with AsyncActionSu
     override def send()(implicit sender: AgiCommandSender): Future[GetVariableResponse] =
         sender.send(this) >>= toResult
 
-    private def toResult(response: SuccessResponse): Future[GetVariableResponse] =
-        if(response.resultCode == "0") GetVariableResponse.NotSet.toFuture
-        else GetVariableResponse.Success(response.extra).toFuture
+    private def toResult(origin: SuccessResponse): Future[GetVariableResponse] =
+        if(origin.resultCode == "0") GetVariableResponse.NotSet()(origin).toFuture
+        else GetVariableResponse.Success(origin.extra)(origin).toFuture
 }

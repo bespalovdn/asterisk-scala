@@ -1,11 +1,9 @@
 package com.github.bespalovdn.asteriskscala.agi.response
 
-import com.github.bespalovdn.asteriskscala.agi.response.impl.CustomAgiResponse
-
-sealed trait GetVariableResponse extends SuccessResponse
+sealed trait GetVariableResponse extends CustomResponse
 
 object GetVariableResponse
 {
-    case class Success(value: String) extends GetVariableResponse with CustomAgiResponse
-    case object NotSet extends GetVariableResponse with CustomAgiResponse
+    case class Success(value: String)(val origin: SuccessResponse) extends GetVariableResponse
+    case class NotSet()(val origin: SuccessResponse) extends GetVariableResponse
 }
