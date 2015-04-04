@@ -39,4 +39,5 @@ object FailResponse
     case class InvalidCommand(response: String) extends Exception("Invalid command.") with FailResponse // 510 code
     case class ChannelIsDead(response: String) extends Exception("Channel is dead.") with FailResponse // 511 code
     case class InvalidSyntax(response: String) extends Exception("Invalid command syntax.") with FailResponse // 520 code
+    case class Error(response: String) extends Exception("Command error: " + response) with FailResponse // other error (e.g. 200 result=-1)
 }
