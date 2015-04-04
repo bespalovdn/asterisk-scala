@@ -9,18 +9,18 @@ object AgiResponse
         case _ => fail(line)
     }
 
-    private def success(line: String): AgiResponseSuccess = ???
+    private def success(line: String): AgiResponse = ???
 
-    private def fail(line: String): AgiResponseFail = line.take(3) match {
-        case "510" => AgiResponseFail.InvalidCommand
-        case "511" => AgiResponseFail.ChannelIsDead
-        case "520" => AgiResponseFail.InvalidSyntax
+    private def fail(line: String): FailResponse = line.take(3) match {
+        case "510" => FailResponse.InvalidCommand
+        case "511" => FailResponse.ChannelIsDead
+        case "520" => FailResponse.InvalidSyntax
         case _ =>
             // according to http://www.asteriskdocs.org/en/3rd_Edition/asterisk-book-html-chunk/AGI-communication.html
             // if a channel hangs up while your AGI application is still executing, the asterisk will send a line,
             // containing the word HANGUP:
             if(line.startsWith("HANGUP"))
-                AgiResponseFail.ChannelIsDead
+                FailResponse.ChannelIsDead
             else
                 throw new InvalidAgiResponseException(line)
     }
@@ -28,12 +28,10 @@ object AgiResponse
     class InvalidAgiResponseException(line: String) extends Exception("Unexpected AGI response: " + line)
 }
 
-sealed trait AgiResponseFail extends AgiResponse
-object AgiResponseFail
+sealed trait FailResponse extends Throwable with AgiResponse
+object FailResponse
 {
-    case object InvalidCommand extends AgiResponseFail // 510 code
-    case object ChannelIsDead extends AgiResponseFail // 511 code
-    case object InvalidSyntax extends AgiResponseFail // 520 code
+    case object InvalidCommand extends Exception("Invalid command.") with FailResponse // 510 code
+    case object ChannelIsDead extends Exception("Channel is dead.") with FailResponse // 511 code
+    case object InvalidSyntax extends Exception("Invalid command syntax.") with FailResponse // 520 code
 }
-
-trait AgiResponseSuccess extends AgiResponse
