@@ -8,6 +8,8 @@ import scala.concurrent.Future
 
 class GetVariableCommand(variable: String) extends AgiCommand with AsyncActionSupport
 {
+    override def toString: String = "GET VARIABLE " + variable
+
     override def send()(implicit sender: AgiCommandSender): Future[GetVariableResult] =
         sender.send(this) >>= toResult
 
@@ -16,11 +18,11 @@ class GetVariableCommand(variable: String) extends AgiCommand with AsyncActionSu
         case GetVariableCommand.success(value) => GetVariableResult.Success(value).toFuture
         case other => Future.failed(FailResponse.Error(other))
     }
-
 }
 
+private
 object GetVariableCommand
 {
-    private lazy val notSet  = """200 result=0"""
-    private lazy val success = """200 result=1 \((.*)\)""".r
+    lazy val notSet  = """200 result=0"""
+    lazy val success = """200 result=1 \((.*)\)""".r
 }
