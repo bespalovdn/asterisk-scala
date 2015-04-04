@@ -4,7 +4,7 @@ import com.github.bespalovdn.asteriskscala.common.logging.impl.LoggerImpl
 
 import scala.reflect.ClassTag
 
-trait LoggerSupport
+trait LoggerSupport extends LoggerProvider
 {
     def logger: Logger = createLogger(loggerClass)
 

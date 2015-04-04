@@ -4,14 +4,14 @@ import com.github.bespalovdn.asteriskscala.agi.handler.ChannelHandlerContextProv
 import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
 import io.netty.channel.Channel
 
-trait ChannelLoggerSupport extends LoggerSupport
+trait ChannelLoggerSupport extends ChannelLoggerProvider with LoggerSupport
 {
-    def provider: ChannelHandlerContextProvider
+    this: ChannelHandlerContextProvider =>
 
     override def loggerTag: String = {
         val channel = for (
-            context <- Option(provider.context);
-            channel <- Option(context.channel)
+            _context <- Option(context);
+            channel <- Option(_context.channel)
         ) yield channel
         channel match {
             case Some(chan) => loggerTag(chan)

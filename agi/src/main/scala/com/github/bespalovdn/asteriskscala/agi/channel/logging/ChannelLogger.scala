@@ -2,7 +2,7 @@ package com.github.bespalovdn.asteriskscala.agi.channel.logging
 
 import com.github.bespalovdn.asteriskscala.agi.handler.ChannelHandlerContextProvider
 import com.github.bespalovdn.asteriskscala.common.logging.Logger
-import io.netty.channel.Channel
+import io.netty.channel.{Channel, ChannelHandlerContext}
 
 import scala.reflect.ClassTag
 
@@ -11,11 +11,14 @@ object ChannelLogger{
         new ChannelLogger[T](provider).logger
 }
 
-private class ChannelLogger[T](override val provider: ChannelHandlerContextProvider)
+private class ChannelLogger[T](val provider: ChannelHandlerContextProvider)
                               (implicit classTag: ClassTag[T])
     extends ChannelLoggerSupport
+    with ChannelHandlerContextProvider
 {
-    override protected[logging] def logTag(chan: Channel): String = "(" + chan.hashCode().toString + ")"
+    override def context: ChannelHandlerContext = provider.context
 
-    override def defaultLoggerClass: Class[_] = classTag.runtimeClass
+    override protected[logging] def loggerTag(chan: Channel): String = "(" + chan.hashCode().toString + ")"
+
+    override def loggerClass: Class[_] = classTag.runtimeClass
 }

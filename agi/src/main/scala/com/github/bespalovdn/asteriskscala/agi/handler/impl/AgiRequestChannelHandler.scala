@@ -1,18 +1,18 @@
 package com.github.bespalovdn.asteriskscala.agi.handler.impl
 
-import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import com.github.bespalovdn.asteriskscala.agi.transport.{AgiCommandResponseDecoder, AgiRequestDecoder}
+import com.github.bespalovdn.asteriskscala.common.logging.LoggerProvider
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]
 abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiRequest]
     with AsyncActionSupport
+    with LoggerProvider
 {
     def contextHolder: ChannelHandlerContextHolder
-    def loggerTrait: ChannelLoggerSupport
 
     def agiRequestHandlerImpl: AgiRequestHandler
 
@@ -22,10 +22,10 @@ abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiR
     }
 
     override def channelRead0(ctx: ChannelHandlerContext, request: AgiRequest): Unit = {
-        loggerTrait.logger.info("AGI request received: " + request)
+        logger.info("AGI request received: " + request)
         agiRequestHandlerImpl.handle(request).
             recoverWith(agiRequestHandlerImpl.recovery).
-            onComplete{case _ => contextHolder.context.close(); loggerTrait.logger.info("Done.")}
+            onComplete{case _ => contextHolder.context.close(); logger.info("Done.")}
         rebuildPipeline()
     }
 
@@ -41,7 +41,7 @@ abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiR
 }
 
 private [handler]
-trait AgiRequestChannelHandlerFactory
+trait AgiRequestChannelHandlerProvider
 {
-    def newAgiRequestChannelHandler(): AgiRequestChannelHandler
+    def agiRequestChannelHandler: AgiRequestChannelHandler
 }
