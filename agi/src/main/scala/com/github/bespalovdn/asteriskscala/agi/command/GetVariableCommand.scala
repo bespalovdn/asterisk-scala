@@ -6,7 +6,7 @@ import com.github.bespalovdn.asteriskscala.agi.response.{GetVariableResponse, Su
 
 import scala.concurrent.Future
 
-class GetVariableCommand(variable: String) extends AgiCommand with AsyncActionSupport
+class GetVariableCommand private (variable: String) extends AgiCommand with AsyncActionSupport
 {
     override def toString: String = "GET VARIABLE " + variable
 
@@ -16,4 +16,9 @@ class GetVariableCommand(variable: String) extends AgiCommand with AsyncActionSu
     private def toResult(origin: SuccessResponse): Future[GetVariableResponse] =
         if(origin.resultCode == "0") GetVariableResponse.NotSet()(origin).toFuture
         else GetVariableResponse.Success(origin.extra)(origin).toFuture
+}
+
+object GetVariableCommand
+{
+    def apply(variable: String) = new GetVariableCommand(variable)
 }

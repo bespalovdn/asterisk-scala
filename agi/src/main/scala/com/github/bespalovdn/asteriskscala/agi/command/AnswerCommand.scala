@@ -5,14 +5,9 @@ import com.github.bespalovdn.asteriskscala.agi.response.SuccessResponse
 
 import scala.concurrent.Future
 
-class SetVariableCommand private (name: String, value: String) extends AgiCommand
+object AnswerCommand extends AgiCommand
 {
-    override def toString: String = """SET VARIABLE %s "%s"""".format(name, value)
+    override def toString: String = "ANSWER"
 
     override def send()(implicit sender: AgiCommandSender): Future[SuccessResponse] = sender.send(this)
-}
-
-object SetVariableCommand
-{
-    def apply(name: String, value: String) = new SetVariableCommand(name, value)
 }
