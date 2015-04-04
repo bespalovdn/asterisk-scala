@@ -28,7 +28,7 @@ trait AgiRequestHandler
     }
 
     def initializeChannel(channel: Channel) {
-        impl.buildPipeline(channel.pipeline())
+        impl.initialBuilder.build(channel.pipeline())
     }
 
     override def context: ChannelHandlerContext = impl.context
@@ -36,7 +36,7 @@ trait AgiRequestHandler
     private object impl extends ChannelHandlerContextHolder
         with AgiRequestChannelHandlerProvider
         with AgiCommandResponseChannelHandlerProvider
-        with PipelineBuilder
+        with PipelineBuilderFactory
     {
         override lazy val agiRequestChannelHandler = new AgiRequestChannelHandler {
             override def agiRequestHandlerImpl: AgiRequestHandler = self
