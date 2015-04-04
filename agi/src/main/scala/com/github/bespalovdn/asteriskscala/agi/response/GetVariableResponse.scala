@@ -1,3 +1,5 @@
 package com.github.bespalovdn.asteriskscala.agi.response
 
-case class GetVariableResponse(value: String) extends AgiResponse
+import com.github.bespalovdn.asteriskscala.agi.response.impl.CustomAgiResponse
+
+case class GetVariableResponse(value: String) extends CustomAgiResponse
