@@ -46,17 +46,17 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
                     channelPromise.failure(future.cause())
             }
         })
-        val lifetime = new LifeTime(channelPromise.future)
-        lifetime.started >> {logger.info("Server started.").toFuture}
-        lifetime.stopped >> {
-            logger.info("Server stopped.")
-            childGroup.shutdownGracefully
-            parentGroup.shutdownGracefully.toFuture
+        def cleanup(): Future[Unit] = {
+            val f1 = parentGroup.shutdownGracefully().asScala
+            val f2 = childGroup.shutdownGracefully().asScala
+            f1 >> f2 >> logger.info("Server stopped.").toFuture
         }
+        val lifetime = new LifeTime(channelPromise.future, cleanup)
+        lifetime.started >> {logger.info("Server started.").toFuture}
         lifetime
     }
 
-    class LifeTime(channel: Future[Channel])
+    class LifeTime(channel: Future[Channel], cleanup: () => Future[Unit])
     {
         /**
          * Returns `started` future, which complete when server started.
@@ -66,7 +66,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
         /**
          * Returns `stopped` future, which complete when server stopped.
          */
-        lazy val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> ().toFuture
+        lazy val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> cleanup()
 
         /**
          * Ask the server to stop.
