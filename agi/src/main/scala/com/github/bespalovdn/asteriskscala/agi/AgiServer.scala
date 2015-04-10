@@ -58,7 +58,14 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
 
     class LifeTime(channel: Future[Channel])
     {
+        /**
+         * Returns `started` future, which complete when server started.
+         */
         lazy val started: Future[Unit] = channel >> ().toFuture
+
+        /**
+         * Returns `stopped` future, which complete when server stopped.
+         */
         lazy val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> ().toFuture
 
         /**
