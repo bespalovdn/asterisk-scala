@@ -61,20 +61,17 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
         /**
          * Returns `started` future, which complete when server started.
          */
-        lazy val started: Future[Unit] = channel >> ().toFuture
+        val started: Future[Unit] = channel >> ().toFuture
 
         /**
          * Returns `stopped` future, which complete when server stopped.
          */
-        lazy val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> cleanup()
+        val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> cleanup()
 
         /**
          * Ask the server to stop.
          * @return Future which complete when server stopped.
          */
-        def stop(): Future[Unit] = for(
-            ch <- channel;          //get the Channel value
-            _ <- ch.close().asScala //close the channel
-        ) yield stopped             //return `stopped` future
+        def stop(): Future[Unit] = (channel >>= {_.close().asScala}) >> stopped
     }
 }
