@@ -65,6 +65,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
 
         /**
          * Returns `stopped` future, which complete when server stopped.
+         * NOTE: it has to be a `val`, in order to ensure the `cleanup()` function called anyway.
          */
         val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> cleanup()
 
