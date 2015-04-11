@@ -1,4 +1,5 @@
-target/
+.gradle/
+build/
 
 # Intellj IDEA's files:
 .idea/
