@@ -1,10 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.request
 
 import com.github.bespalovdn.asteriskscala.common.test.TestSupport
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class LineParserTest extends TestSupport
 {
     "LineParserTest" should
