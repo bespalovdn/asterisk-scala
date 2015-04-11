@@ -6,9 +6,10 @@ class LineParserTest extends TestSupport
 {
     "LineParserTest" should
     "check correctness parsing the AGI variables" in {
+        //valid examples:
         assert(parse("agi_request: HELLO\n") == ("request", "HELLO"))
         assert(parse("agi_request: HELLO, world!\n") == ("request", "HELLO, world!"))
-        //missing end of line:
+        //invalid: missing end of line:
         assert(parse("agi_request: HELLO") == null)
     }
 

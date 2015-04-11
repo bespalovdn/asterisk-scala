@@ -8,10 +8,6 @@ object Build extends sbt.Build
         scalacOptions ++= Seq("-feature", "-unchecked", "-language:postfixOps")
     )
 
-//    lazy val asteriskScala = project.in(file(".")).
-//        settings(name := "asterisk-scala").
-//        aggregate(agi)
-
     lazy val agi = project.in(file("agi")).
         settings(name := "agi").
         settings(buildSettings: _*).
