@@ -1,6 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.response
 
-sealed trait GetVariableResponse extends CustomResponse
+sealed trait GetVariableResponse extends CustomAgiResponse
 
 object GetVariableResponse
 {
