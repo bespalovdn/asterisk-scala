@@ -11,4 +11,4 @@ AGI: under development
 
 AMI: not started
 
-Help + Samples: not started
+Documentation + Samples: not started
