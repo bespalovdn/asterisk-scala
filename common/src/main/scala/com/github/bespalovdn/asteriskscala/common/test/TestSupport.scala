@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.common.test
 
 import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
-import org.apache.log4j.{Appender, ConsoleAppender, EnhancedPatternLayout, Level, Logger => L4jLogger}
+import org.apache.log4j._
 import org.scalatest._
 
 trait TestSupport
@@ -17,6 +17,11 @@ trait TestSupport
         super.beforeAll()
         initLogging()
     }
+
+    override protected def afterAll(): Unit = {
+        shutdownLogging()
+        super.afterAll()
+    }
 }
 
 private [test]
@@ -25,10 +30,12 @@ trait LoggingInitializer extends LoggerSupport
     def logLevel: Level = Level.DEBUG
 
     protected def initLogging(): Unit ={
-        L4jLogger.getRootLogger.setLevel(logLevel)
-        L4jLogger.getRootLogger.addAppender(consoleAppender())
-        logger.info("Logger initialized with log Level=[%s]".format(L4jLogger.getRootLogger.getLevel))
+        LogManager.getRootLogger.setLevel(logLevel)
+        LogManager.getRootLogger.addAppender(consoleAppender())
+        logger.info("Logger initialized with log Level=[%s]".format(LogManager.getRootLogger.getLevel))
     }
+
+    protected def shutdownLogging(): Unit = LogManager.shutdown()
 
     private def consoleAppender(): Appender ={
         val appender = new ConsoleAppender()
