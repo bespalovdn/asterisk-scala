@@ -15,6 +15,11 @@ object Build extends sbt.Build
             dependency.netty)).
         dependsOn(common)
 
+    lazy val agiExamples = project.in(file("agi-examples")).
+        settings(name := "agi-examples").
+        settings(buildSettings: _*).
+        dependsOn(agi, common)
+
     lazy val common = project.in(file("common")).
         settings(name := "common").
         settings(buildSettings: _*).
