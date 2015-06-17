@@ -34,6 +34,8 @@ trait AgiRequestHandler
 
     override def context: ChannelHandlerContext = impl.context
 
+    protected implicit def agiCommandSender: AgiCommandSender = this
+
     private object impl extends ChannelHandlerContextHolder
         with AgiRequestChannelHandlerProvider
         with AgiCommandResponseChannelHandlerProvider
