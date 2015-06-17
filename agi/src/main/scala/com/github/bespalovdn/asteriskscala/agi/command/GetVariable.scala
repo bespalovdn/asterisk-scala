@@ -6,9 +6,9 @@ import com.github.bespalovdn.asteriskscala.agi.response.{GetVariableResponse, Su
 
 import scala.concurrent.Future
 
-class GetVariableCommand private (variable: String) extends AgiCommand with AsyncActionSupport
+class GetVariable private (val variable: String) extends AgiCommandImpl with AsyncActionSupport
 {
-    override def toString: String = "GET VARIABLE " + variable
+    override def toString: String = "GET VARIABLE " + variable.escaped
 
     override def send()(implicit sender: AgiCommandSender): Future[GetVariableResponse] =
         sender.send(this) >>= toResult
@@ -18,7 +18,7 @@ class GetVariableCommand private (variable: String) extends AgiCommand with Asyn
         else GetVariableResponse.Success(origin.extra)(origin).toFuture
 }
 
-object GetVariableCommand
+object GetVariable
 {
-    def apply(variable: String) = new GetVariableCommand(variable)
+    def apply(variable: String) = new GetVariable(variable)
 }
