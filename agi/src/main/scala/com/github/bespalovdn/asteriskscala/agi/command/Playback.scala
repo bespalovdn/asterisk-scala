@@ -9,8 +9,6 @@ object Playback
         case object NoAnswer extends Option {override def toString = "noanswer"}
     }
 
-    def apply(file: String, options: Set[Option] = Set.empty) = Exec("Playback", file, options.mkString(","))
-
-    def apply(files: Seq[String], options: Set[Option] = Set.empty) =
-        Exec("Playback", files.mkString("&"), options.mkString(","))
+    def apply(file: String, options: Set[Option] = Set.empty): AgiCommand =
+        Exec("Playback", file, options.mkString(","))
 }
