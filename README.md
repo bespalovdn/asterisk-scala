@@ -91,9 +91,9 @@ But, in such simple cases, it could be easier to type:
     GetVariable("EXTEN").send() >>= {case GetVariableResponse.Success(a) => SetVariable("TMP", a).send()}
 
 `FutureOps` trait declared in trait `FutureExtensions`. 
-So you may use this functionality outside of AgiRequestHandler as well.
+So you may use this functionality outside of `AgiRequestHandler` as well.
 
-Last noteworthy thing about this example, is necessity to use `().toFuture` at the end of chain of commands.
+Last noteworthy thing about this example is necessity to use `().toFuture` at the end of chain of commands.
 According to declaration, result of `handle` method is `Future[Unit]`, 
 but result of `Hangup.send()` command is `Future[SuccessResponse]` type. 
 So this last command `().toFuture` is kind of transformation the result of penultimate command to the `Future[Unit]`.
