@@ -54,3 +54,20 @@ able to process thousands AGI requests simultaneously.
 
 On the transport level we're using asynchronous networking library `Netty`, which uses Java's NIO sockets in turn.
 
+Back to the chain of commands in our example.
+Consider `Playback("demo-congrats")` command. This is factory method that returns instance of `AgiCommand` class.
+When method `send()` is being called on `AgiCommand`, then real action is being executed. AGI command is going to the Asterisk. 
+The result of `AgiCommand.send()` is `Future[SuccessResponse]`. 
+If Asterisk successfully executes the command, the future completes with `SuccessResponse`.
+If something goes wrong, the future completes with `scala.util.Failure`, which contains the reason of fail.
+You free to use any functions on `scala.concurrent.Future` when dealing with AGI commands. 
+
+
+Operator `>>` is something like glue, that puts two commands together in sequence. This operator defined in following trait:
+
+    implicit class FutureOps[A](f: Future[A])(implicit context: ExecutionContext)
+    {
+        def >>= [B](handler: A => Future[B]): Future[B] = f flatMap handler
+        def >> [B](handler: => Future[B]): Future[B] = f flatMap {_ => handler}
+    }
+    
