@@ -39,3 +39,18 @@ Since the library announced as fully asynchronous, the result of `handle` method
 You have to keep in mind the primary rule: your code inside this `handle` method should be implemented in non-blocking manner.
 If you has to block by some reason (e.g. read some file from the disk, or get data from DB), you have to 
 wrap blocking code into separated execution context. Consider `scala.concurrent.blocking` for example. 
+
+In this example we create the chain of AGI commands:
+
+    Playback("demo-congrats").send() >> Hangup.send() >> ().toFuture
+
+All the commands in this chain executed consequentially. 
+The second command in chain will be executed only after first command successfully finished, and so on.
+ 
+All the commands in this chain executed in non-blocking fashion. It means, the thread sending the AGI request will not
+stop in waiting state, until AGI response received. While request is being processed by the Asterisk, freed thread 
+can serve next AGI request. This feature allows us to affirm: this library designed for high-loaded services, 
+able to process thousands AGI requests simultaneously.  
+
+On the transport level we're using asynchronous networking library `Netty`, which uses Java's NIO sockets in turn.
+
