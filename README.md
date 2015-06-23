@@ -62,8 +62,8 @@ If Asterisk successfully executes the command, the future completes with `Succes
 If something goes wrong, the future completes with `scala.util.Failure`, which contains the reason of fail.
 You free to use any functions on `scala.concurrent.Future` when dealing with AGI commands. 
 
-
-Operator `>>` is something like glue, that puts two commands together in sequence. This operator defined in following trait:
+Operator `>>` is something like glue, that puts two commands together in sequence. 
+This operator defined in following trait:
 
     implicit class FutureOps[A](f: Future[A])(implicit context: ExecutionContext)
     {
@@ -71,3 +71,38 @@ Operator `>>` is something like glue, that puts two commands together in sequenc
         def >> [B](handler: => Future[B]): Future[B] = f flatMap {_ => handler}
     }
     
+that is:
+
+* This operator is generic on its parameters, i.e. you may use it on any type of Future.
+* This operator declares: right-side command will be executed only AFTER left-side command complete.
+  This simple rule allows you to build chains of commands that should be executed one-by-one.
+  
+There is also useful `>>=` operator in FutureOps trait. 
+This operator allows to use lambda in cases, when result of first command is being used in second command as input parameter.
+For example, you able to use scala's `for` operator to deal with futures and its results:
+
+    for(
+        GetVariableResponse.Success(a) <- GetVariable("EXTEN").send();
+        b <- SetVariable("TMP", a).send()
+    ) yield b
+    
+But, in such simple cases, it could be easier to type:
+
+    GetVariable("EXTEN").send() >>= {case GetVariableResponse.Success(a) => SetVariable("TMP", a).send()}
+
+`FutureOps` trait declared in trait `FutureExtensions`. 
+So you may use this functionality outside of AgiRequestHandler as well.
+
+Last noteworthy thing about this example, is necessity to use `().toFuture` at the end of chain of commands.
+According to declaration, result of `handle` method is `Future[Unit]`, 
+but result of `Hangup.send()` command is `Future[SuccessResponse]` type. 
+So this last command `().toFuture` is kind of transformation the result of penultimate command to the `Future[Unit]`.
+Note, that `toFuture` helper method is defined in trait:
+
+    implicit class FutureBuilder[A](value: A)
+    {
+        def toFuture: Future[A] = Promise.successful(value).future
+    }
+    
+which is placed in same `FutureExtensions` trait.
+
