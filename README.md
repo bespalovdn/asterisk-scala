@@ -15,17 +15,27 @@ This library implements reactive, asynchronous, non-blocking approach in handlin
 
 # AGI
 
-*TODO:* add description of `simpleagiserver`
+## Example: `simpleagiserver`
 
-    import com.github.bespalovdn.asteriskscala.agi.command.{Hangup, Playback}
-    import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
-    import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
+This example will demonstrate minimal code you have to write in order to create simple AGI server.
 
-    import scala.concurrent.Future
-    
+In this simple example our AGI server will execute `Playback` command to play standard "demo-congrats" phrase, 
+and then `Hangup` command. 
+
+At first, you have to create instance of `AgiRequestHandler`:
+
     class AgiHandler extends AgiRequestHandler
     {
         override def handle(request: AgiRequest): Future[Unit] = {
             Playback("demo-congrats").send() >> Hangup.send() >> ().toFuture
         }
     }
+    
+This handler will process single AGI request. I.e. for every single AGI request the `AgiServer` will create their own `AgiHandler` instance.
+
+The logic of handler should be placed into `handle(request: AgiRequest): Future[Unit]` method.
+
+Since the library announced as fully asynchronous, the result of `handle` method is `Future` of `Unit` type. 
+You have to keep in mind the primary rule: your code inside this `handle` method should be implemented in non-blocking manner.
+If you has to block by some reason (e.g. read some file from the disk, or get data from DB), you have to 
+wrap blocking code into separated execution context. Consider `scala.concurrent.blocking` for example. 
