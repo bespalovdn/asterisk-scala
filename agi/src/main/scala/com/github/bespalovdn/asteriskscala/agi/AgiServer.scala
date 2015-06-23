@@ -56,6 +56,11 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
         lifetime
     }
 
+    /**
+     * Represents this server's lifetime.
+     * @param channel Represents connection channel in terms of Netty.
+     * @param cleanup The cleanup function, which should be called when channel is closed.
+     */
     class LifeTime(channel: Future[Channel], cleanup: () => Future[Unit])
     {
         /**
@@ -65,7 +70,6 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
 
         /**
          * Returns `stopped` future, which complete when server stopped.
-         * NOTE: it has to be a `val`, in order to ensure the `cleanup()` function called anyway.
          */
         val stopped: Future[Unit] = (channel >>= {ch => ch.closeFuture().asScala}) >> cleanup()
 
