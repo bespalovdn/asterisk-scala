@@ -2,9 +2,10 @@
 
 The opensource library written in Scala to integrate your great apps with Asterisk PBX.
 
-The library provides capabilities to interact with Asterisk through AGI & AMI.
+This library provides capabilities to interact with Asterisk through AGI & AMI.
 
-This library implements reactive, asynchronous, non-blocking approach in handling the requests.
+This library implements reactive (asynchronous, non-blocking) approach in handling the requests.
+It designed to handle thousands concurrent AGI/AMI requests simultaneously.
 
 ## Current status: 
 
@@ -17,12 +18,12 @@ This library implements reactive, asynchronous, non-blocking approach in handlin
 
 ## Example: `simpleagiserver`
 
-This example will demonstrate minimal code you have to write in order to create simple AGI server.
-
-In this simple example our AGI server will execute `Playback` command to play standard "demo-congrats" phrase, 
+This example will demonstrate the minimal code you have to write in order to create simple AGI server.
+In this example our AGI server will execute `Playback` command to play standard "demo-congrats" phrase, 
 and then `Hangup` command. 
 
-At first, you have to create instance of `AgiRequestHandler`:
+At first, you have to create the instance of `AgiRequestHandler`. 
+This class will contain main business-logic of AGI request handler: 
 
     class AgiHandler extends AgiRequestHandler
     {
@@ -31,7 +32,47 @@ At first, you have to create instance of `AgiRequestHandler`:
         }
     }
     
-This handler will process single AGI request. I.e. for every single AGI request the `AgiServer` will create their own `AgiHandler` instance.
+This handler will process single AGI request. 
+I.e. for every single AGI request the `AgiServer` will create their own `AgiHandler` instance.
+We will back to details of this class implementation a bit later.
+
+The second class you have to create, is `AgiHandlerFactory`:
+
+    class AgiHandlerFactory extends AgiRequestHandlerFactory
+    {
+        override def createHandler(): AgiRequestHandler = new AgiHandler()
+    }
+    
+The `AgiServer` instance will use this factory to create an instance of `AgiHandler`.
+Each time the new `AGI` request received by `AgiServer`, 
+the `AgiHandlerFactory.createHandler()` method is going to call by `AgiServer`.
+
+Finally, you have to create an instance of `AgiServer`:
+
+    object Main
+    {
+        val agiBindAddr = InetSocketAddress.createUnresolved("0.0.0.0", 5000)
+    
+        def main(args: Array[String]): Unit ={
+            // create the AgiServer instance
+            val server = new AgiServer(agiBindAddr, new AgiHandlerFactory)
+            // run the server
+            val lifetime = server.run()
+            // wait until server stopped
+            Await.ready(lifetime.stopped, Duration.Inf)
+        }
+    }
+
+The comments in code gives detailed presentation about what's going on here.
+    
+Now, back to the `AgiHandler's` implementation:
+
+    class AgiHandler extends AgiRequestHandler
+    {
+        override def handle(request: AgiRequest): Future[Unit] = {
+            Playback("demo-congrats").send() >> Hangup.send() >> ().toFuture
+        }
+    }
 
 The logic of handler should be placed into `handle(request: AgiRequest): Future[Unit]` method.
 
@@ -44,23 +85,22 @@ In this example we create the chain of AGI commands:
 
     Playback("demo-congrats").send() >> Hangup.send() >> ().toFuture
 
-All the commands in this chain executed consequentially. 
-The second command in chain will be executed only after first command successfully finished, and so on.
- 
-All the commands in this chain executed in non-blocking fashion. It means, the thread sending the AGI request will not
-stop in waiting state, until AGI response received. While request is being processed by the Asterisk, freed thread 
-can serve next AGI request. This feature allows us to affirm: this library designed for high-loaded services, 
-able to process thousands AGI requests simultaneously.  
+Every command in chain has following signature:
 
-On the transport level we're using asynchronous networking library `Netty`, which uses Java's NIO sockets in turn.
-
-Back to the chain of commands in our example.
-Consider `Playback("demo-congrats")` command. This is factory method that returns instance of `AgiCommand` class.
-When method `send()` is being called on `AgiCommand`, then real action is being executed. AGI command is going to the Asterisk. 
-The result of `AgiCommand.send()` is `Future[SuccessResponse]`. 
+    trait AgiCommand
+    {
+        def send()(implicit sender: AgiCommandSender): Future[SuccessResponse]
+    }
+    
+Executing `send()` method on the `AgiCommand`, the real sending of `AGI` request is going to perform.
 If Asterisk successfully executes the command, the future completes with `SuccessResponse`.
 If something goes wrong, the future completes with `scala.util.Failure`, which contains the reason of fail.
 You free to use any functions on `scala.concurrent.Future` when dealing with AGI commands. 
+
+Now look at the commands in the chain: `a >> b >> c`.
+All the commands in the chain executed consequentially. 
+The second command in chain will be executed only after the first one has successfully finished, and so on.
+This rule is being worked due to `>>` operator.
 
 Operator `>>` is something like glue, that puts two commands together in sequence. 
 This operator defined in following trait:
@@ -79,7 +119,7 @@ that is:
   
 There is also useful `>>=` operator in FutureOps trait. 
 This operator allows to use lambda in cases, when result of first command is being used in second command as input parameter.
-For example, you able to use scala's `for` operator to deal with futures and its results:
+For example, you able to use scala's `for` expression to deal with futures and its results:
 
     for(
         GetVariableResponse.Success(a) <- GetVariable("EXTEN").send();
@@ -104,5 +144,14 @@ Note, that `toFuture` helper method is defined in trait:
         def toFuture: Future[A] = Promise.successful(value).future
     }
     
-which is placed in same `FutureExtensions` trait.
+which is placed in same `FutureExtensions` trait. Thus you may use it outside of `AgiRequestHandler`.
 
+## Some common states about this library.
+
+This library designed with strong concurrency principles at the core.  
+Each sending of `AgiCommand` is being executed in non-blocking fashion. 
+It means, the thread sending the `AGI` request will not stop in waiting state, 
+until `AGI` response received. While request is being processed by the Asterisk, freed thread 
+can serve next `AGI` request. This feature allows to handle a lot of `AGI` requests/commands simultaneously.  
+
+On the transport level we're using asynchronous networking library `Netty`, which uses Java's NIO sockets in turn.
