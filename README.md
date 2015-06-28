@@ -156,3 +156,7 @@ This feature allows to handle a lot of `AGI` requests/commands simultaneously.
 
 On the transport level we're using the `Netty` library, which uses Java's NIO sockets in turn.
 
+
+# Testing the AGI server.
+
+TODO: add samples of testing.
