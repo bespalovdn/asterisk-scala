@@ -150,8 +150,9 @@ which is placed in same `FutureExtensions` trait. Thus you may use it outside of
 
 This library designed with strong concurrency principles at the core.  
 Each sending of `AgiCommand` is being executed in non-blocking fashion. 
-It means, the thread sending the `AGI` request will not stop in waiting state, 
-until `AGI` response received. While request is being processed by the Asterisk, freed thread 
-can serve next `AGI` request. This feature allows to handle a lot of `AGI` requests/commands simultaneously.  
+It means, the thread sending the `AGI` request will not stop, waiting until the `AGI` response received. 
+While request is being processed by the Asterisk, working thread can serve next `AGI` request. 
+This feature allows to handle a lot of `AGI` requests/commands simultaneously.  
 
-On the transport level we're using asynchronous networking library `Netty`, which uses Java's NIO sockets in turn.
+On the transport level we're using the `Netty` library, which uses Java's NIO sockets in turn.
+
