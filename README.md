@@ -7,12 +7,12 @@ This library provides capabilities to interact with Asterisk through AGI & AMI.
 This library implements reactive (asynchronous, non-blocking) approach in handling the requests.
 It designed to handle thousands concurrent AGI/AMI requests simultaneously.
 
-## Current status: 
+## Milestones: 
 
-**AGI**: under development
-
-**AMI**: not started
-
+* _AGI_ + UT _(in progress)_
+* AMI + UT
+* _Documentation_ _(in progress)_
+* Uploading to central storage
 
 # AGI
 
