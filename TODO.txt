@@ -1,4 +1,2 @@
-* Truncate class-name-path in the log message (com.github.bespalovdn):
-2015-04-11 22:17:54,416 [pool-15-thread-5] [823542791] INFO  [com.github.bespalovdn.asteriskscala.agi.request.LineParserTest] Logger initialized with log Level=[DEBUG]
-
+* Log4j -> Slf4j
 

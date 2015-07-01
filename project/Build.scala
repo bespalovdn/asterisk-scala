@@ -11,8 +11,6 @@ object Build extends sbt.Build
     lazy val agi = project.in(file("agi")).
         settings(name := "agi").
         settings(buildSettings: _*).
-        settings(libraryDependencies ++= dependency.common ++ Seq(
-            dependency.netty)).
         dependsOn(common)
 
     lazy val agiExamples = project.in(file("agi-examples")).
@@ -23,11 +21,12 @@ object Build extends sbt.Build
     lazy val common = project.in(file("common")).
         settings(name := "common").
         settings(buildSettings: _*).
-        settings(libraryDependencies ++= dependency.common ++ Seq(
-            dependency.netty))
+        settings(libraryDependencies ++= dependency.akka ++ Seq(
+            dependency.log4j,
+            dependency.netty,
+            dependency.scalaArm,
+            dependency.scalaTest,
+            dependency.slf4j))
 
     private object dependency extends Dependencies
-    {
-        lazy val common = Seq(log4j, scalaArm, scalaTest, slf4j)
-    }
 }
