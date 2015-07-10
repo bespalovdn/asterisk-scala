@@ -1,4 +1,4 @@
-package simpleagiserver
+package com.github.bespalovdn.asteriskscala.examples.simpleagiserver
 
 import com.github.bespalovdn.asteriskscala.agi.command.{Hangup, Playback}
 import com.github.bespalovdn.asteriskscala.agi.handler.{AgiRequestHandler, AgiRequestHandlerFactory}

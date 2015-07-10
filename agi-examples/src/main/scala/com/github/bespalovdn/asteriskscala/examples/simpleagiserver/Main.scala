@@ -1,4 +1,4 @@
-package simpleagiserver
+package com.github.bespalovdn.asteriskscala.examples.simpleagiserver
 
 import java.net.InetSocketAddress
 
