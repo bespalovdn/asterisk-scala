@@ -5,21 +5,25 @@ object Build extends sbt.Build
 {
     lazy val buildSettings: Seq[Setting[_]] = Seq(
         scalaVersion := "2.10.4",
-        scalacOptions ++= Seq("-feature", "-unchecked", "-language:postfixOps")
+        scalacOptions ++= Seq(
+            "-feature",
+            "-language:postfixOps",
+            "-unchecked"
+        )
     )
 
-    lazy val agi = project.in(file("agi")).
-        settings(name := "agi").
-        settings(buildSettings: _*).
+    lazy val agi = library("agi").
         dependsOn(common)
 
-    lazy val agiExamples = project.in(file("agi-examples")).
-        settings(name := "agi-examples").
-        settings(buildSettings: _*).
+    lazy val agiExamples = library("agi-examples").
         dependsOn(agi, common)
 
-    lazy val common = project.in(file("common")).
-        settings(name := "common").
+    lazy val agiTest = library("agi-test").
+        dependsOn(agi, common)
+
+    lazy val common = library("common")
+
+    private def library(path: String): Project = Project(path, file(path)).
         settings(buildSettings: _*).
         settings(libraryDependencies ++= dependency.akka ++ Seq(
             dependency.log4j,
