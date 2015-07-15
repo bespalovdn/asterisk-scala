@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
+import com.github.bespalovdn.asteriskscala.agi.command.response.SuccessResponse
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
-import com.github.bespalovdn.asteriskscala.agi.response.SuccessResponse
 import com.github.bespalovdn.asteriskscala.common.protocol.AsteriskFormatter
 
 import scala.concurrent.Future

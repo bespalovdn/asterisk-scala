@@ -1,8 +1,8 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
+import com.github.bespalovdn.asteriskscala.agi.command.response.{GetVariableResponse, SuccessResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
-import com.github.bespalovdn.asteriskscala.agi.response.{GetVariableResponse, SuccessResponse}
 
 import scala.concurrent.Future
 

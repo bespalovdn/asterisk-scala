@@ -3,10 +3,10 @@ package com.github.bespalovdn.asteriskscala.agi.handler
 import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
+import com.github.bespalovdn.asteriskscala.agi.command.response.SuccessResponse
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.agi.response.SuccessResponse
 import com.github.bespalovdn.asteriskscala.common.logging.Logger
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
