@@ -74,7 +74,7 @@ Now, back to the `AgiHandler's` implementation:
         }
     }
 
-The logic of handler should be placed into `handle(request: AgiRequest): Future[Unit]` method.
+The logic of handler should be placed into `def handle(request: AgiRequest): Future[Unit]` method.
 
 Since the library announced as fully asynchronous, the result of `handle` method is `Future` of `Unit` type. 
 You have to keep in mind the primary rule: your code inside this `handle` method should be implemented in non-blocking manner.
