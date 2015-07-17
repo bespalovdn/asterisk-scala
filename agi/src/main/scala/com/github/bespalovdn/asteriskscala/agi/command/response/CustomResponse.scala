@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command.response
 
 private [response]
-trait CustomAgiResponse extends SuccessResponse
+trait CustomResponse extends SuccessResponse
 {
     def origin: SuccessResponse
 

@@ -1,14 +1,14 @@
 package com.github.bespalovdn.asteriskscala.agi.command.response
 
-sealed trait ChannelStatusResponse extends CustomAgiResponse
+sealed trait ChannelStatusResponse extends CustomResponse
 object ChannelStatusResponse
 {
-    case object ChannelDownAndAvailable extends ChannelStatusResponse
-    case object ChannelDownButReserved extends ChannelStatusResponse
-    case object ChannelIsOffHook extends ChannelStatusResponse
-    case object DigitsBeenDialed extends ChannelStatusResponse
-    case object LineIsRinging extends ChannelStatusResponse
-    case object RemoteIsRinging extends ChannelStatusResponse
-    case object LineIsUp extends ChannelStatusResponse
-    case object LineIsBusy extends ChannelStatusResponse
+    case class ChannelDownAndAvailable(origin: SuccessResponse) extends ChannelStatusResponse
+    case class ChannelDownButReserved(origin: SuccessResponse) extends ChannelStatusResponse
+    case class ChannelIsOffHook(origin: SuccessResponse) extends ChannelStatusResponse
+    case class DigitsBeenDialed(origin: SuccessResponse) extends ChannelStatusResponse
+    case class LineIsRinging(origin: SuccessResponse) extends ChannelStatusResponse
+    case class RemoteIsRinging(origin: SuccessResponse) extends ChannelStatusResponse
+    case class LineIsUp(origin: SuccessResponse) extends ChannelStatusResponse
+    case class LineIsBusy(origin: SuccessResponse) extends ChannelStatusResponse
 }

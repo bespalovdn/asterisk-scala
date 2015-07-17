@@ -14,7 +14,7 @@ class GetVariable private (val variable: String) extends AgiCommandImpl with Asy
         sender.send(this) >>= toResult
 
     private def toResult(origin: SuccessResponse): Future[GetVariableResponse] =
-        if(origin.resultCode == "0") GetVariableResponse.NotSet()(origin).toFuture
+        if(origin.resultCode == "0") GetVariableResponse.NotSet(origin).toFuture
         else GetVariableResponse.Success(origin.extra)(origin).toFuture
 }
 
