@@ -1,10 +1,5 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.command.response.SuccessResponse
-import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
-
-import scala.concurrent.Future
-
 /**
  * Executes an application with given options.
  * [[http://www.voip-info.org/wiki/view/exec]]
@@ -14,8 +9,6 @@ import scala.concurrent.Future
 class Exec private (val application: String, val options: Seq[String]) extends AgiCommandImpl
 {
     override def toString: String = "EXEC %s %s".format(application.escaped, options.escaped)
-
-    override def send()(implicit sender: AgiCommandSender): Future[SuccessResponse] = sender.send(this)
 }
 
 object Exec

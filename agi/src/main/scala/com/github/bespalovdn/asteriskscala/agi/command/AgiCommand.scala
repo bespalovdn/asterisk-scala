@@ -12,3 +12,6 @@ trait AgiCommand
 }
 
 private [command] trait AgiCommandImpl extends AgiCommand with AsteriskFormatter
+{
+    override def send()(implicit sender: AgiCommandSender): Future[SuccessResponse] = sender.send(this)
+}

@@ -13,8 +13,6 @@ import scala.concurrent.Future
 class Hangup private (val channel: String) extends AgiCommandImpl
 {
     override def toString: String = "HANGUP %s" format channel.escaped
-
-    override def send()(implicit sender: AgiCommandSender): Future[SuccessResponse] = sender.send(this)
 }
 
 object Hangup extends AgiCommand
