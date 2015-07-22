@@ -1,5 +1,9 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
+/**
+ * Executes Asterisk's Playback command.
+ * [[http://www.voip-info.org/wiki/view/Asterisk+cmd+Playback]]
+ */
 object Playback
 {
     sealed trait Option

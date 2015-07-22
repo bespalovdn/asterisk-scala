@@ -5,6 +5,11 @@ import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
 
 import scala.concurrent.Future
 
+/**
+ * Hangs up the specified channel.
+ * [[http://www.voip-info.org/wiki/view/hangup]]
+ * @param channel The channel to hang up.
+ */
 class Hangup private (val channel: String) extends AgiCommandImpl
 {
     override def toString: String = "HANGUP %s" format channel.escaped

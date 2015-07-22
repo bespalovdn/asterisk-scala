@@ -6,6 +6,11 @@ import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
 
 import scala.concurrent.Future
 
+/**
+ * Returns the status of the specified channel.
+ * If no channel name is given the returns the status of the current channel.
+ * [[http://www.voip-info.org/wiki/view/channel+status]]
+ */
 class ChannelStatus private (val channel: Option[String]) extends AgiCommandImpl with AsyncActionSupport
 {
     override def toString: String = "CHANNEL STATUS" + {channel match {
