@@ -3,7 +3,7 @@ package com.github.bespalovdn.asteriskscala.agi.handler
 import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
-import com.github.bespalovdn.asteriskscala.agi.command.response.SuccessResponse
+import com.github.bespalovdn.asteriskscala.agi.command.response.{FailResponse, SuccessResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
@@ -25,6 +25,7 @@ trait AgiRequestHandler
     override def send(command: AgiCommand): Future[SuccessResponse] = impl.agiCommandResponseChannelHandler.send(command)
 
     def recovery: PartialFunction[Throwable, Future[Unit]] = {
+        case err: FailResponse => logger.info("AgiCommand failed: " + err.getMessage).toFuture
         case err: Throwable => logger.warn("Unhandled error: " + err.getMessage, err).toFuture
     }
 
