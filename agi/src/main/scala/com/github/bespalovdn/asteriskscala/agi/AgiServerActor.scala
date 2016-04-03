@@ -5,7 +5,6 @@ import java.net.InetSocketAddress
 import akka.actor.Actor
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
 import com.github.bespalovdn.asteriskscala.common.concurrent.FutureExtensions
-import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
 
 import scala.concurrent.duration._
 

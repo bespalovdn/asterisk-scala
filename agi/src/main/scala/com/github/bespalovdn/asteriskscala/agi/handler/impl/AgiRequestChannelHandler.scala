@@ -4,7 +4,6 @@ import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.common.logging.LoggerProvider
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]

@@ -2,8 +2,6 @@ package com.github.bespalovdn.asteriskscala.agi.execution
 
 import java.util.concurrent._
 
-import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
-
 import scala.concurrent.ExecutionContext
 
 object AsyncExecutorService extends LoggerSupport

@@ -1,6 +1,5 @@
 package com.github.bespalovdn.asteriskscala.common.test
 
-import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
 import org.apache.log4j._
 import org.scalatest._
 

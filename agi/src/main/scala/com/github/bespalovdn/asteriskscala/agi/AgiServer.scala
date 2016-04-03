@@ -5,7 +5,6 @@ import java.net.InetSocketAddress
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
 import com.github.bespalovdn.asteriskscala.common.concurrent.FutureConversions
-import com.github.bespalovdn.asteriskscala.common.logging.LoggerSupport
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel._
 import io.netty.channel.nio.NioEventLoopGroup

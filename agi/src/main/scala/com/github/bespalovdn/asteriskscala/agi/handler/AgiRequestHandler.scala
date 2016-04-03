@@ -7,7 +7,6 @@ import com.github.bespalovdn.asteriskscala.agi.command.response.{FailResponse, S
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
-import com.github.bespalovdn.asteriskscala.common.logging.Logger
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
 import scala.concurrent.Future

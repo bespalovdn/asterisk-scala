@@ -3,7 +3,6 @@ package com.github.bespalovdn.asteriskscala.agi.handler.impl
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
 import com.github.bespalovdn.asteriskscala.agi.command.response.{AgiResponse, FailResponse, SuccessResponse}
 import com.github.bespalovdn.asteriskscala.agi.handler.{AgiCommandSender, ChannelHandlerContextProvider}
-import com.github.bespalovdn.asteriskscala.common.logging.LoggerProvider
 import io.netty.channel.{ChannelFuture, ChannelFutureListener, ChannelHandlerContext, SimpleChannelInboundHandler}
 
 import scala.concurrent.{Future, Promise}
