@@ -30,7 +30,7 @@ object Build extends sbt.Build
         lazy val scalaTest = "org.scalatest" % "scalatest_2.10" % "2.2.1"
         lazy val log = Seq(
             "org.slf4j" % "slf4j-api" % "1.7.12",
-            "com.github.bespalovdn" % "scala-log" % "1.0-SNAPSHOT",
+            "com.github.bespalovdn" % "scala-log_2.10" % "1.0-SNAPSHOT",
             "org.slf4j" % "slf4j-log4j12" % "1.7.12" % "test",
             "log4j" % "log4j" % "1.2.17" % "test"
         )
