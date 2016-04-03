@@ -3,15 +3,6 @@ import sbt._
 
 object Build extends sbt.Build
 {
-    lazy val buildSettings: Seq[Setting[_]] = Seq(
-        scalaVersion := "2.10.4",
-        scalacOptions ++= Seq(
-            "-feature",
-            "-language:postfixOps",
-            "-unchecked"
-        )
-    )
-
     lazy val agi = library("agi").
         dependsOn(common)
 
@@ -24,7 +15,6 @@ object Build extends sbt.Build
     lazy val common = library("common")
 
     private def library(path: String): Project = Project(path, file(path)).
-        settings(buildSettings: _*).
         settings(libraryDependencies ++= dependency.akka ++ Seq(
             dependency.log4j,
             dependency.netty,
