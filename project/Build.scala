@@ -10,12 +10,13 @@ object Build extends sbt.Build
         dependsOn(agi, common)
 
     lazy val agiTest = library("agi-test").
+        settings(libraryDependencies ++= dependency.logImpl).
         dependsOn(agi, common)
 
     lazy val common = library("common")
 
     private def library(path: String): Project = Project(path, file(path)).
-        settings(libraryDependencies ++= dependency.akka ++ dependency.log ++ Seq(
+        settings(libraryDependencies ++= dependency.akka ++ dependency.logItf ++ Seq(
             dependency.netty,
             dependency.scalaArm,
             dependency.scalaTest))
@@ -28,11 +29,13 @@ object Build extends sbt.Build
         lazy val netty = "io.netty" % "netty-all" % "4.0.13.Final"
         lazy val scalaArm = "com.jsuereth" %% "scala-arm" % "1.4"
         lazy val scalaTest = "org.scalatest" %% "scalatest" % "2.2.5"
-        lazy val log = Seq(
+        lazy val logItf = Seq(
             "org.slf4j" % "slf4j-api" % "1.7.12",
-            "com.github.bespalovdn" % "scala-log_2.10" % "1.0-SNAPSHOT",
-            "org.slf4j" % "slf4j-log4j12" % "1.7.12" % "test",
-            "log4j" % "log4j" % "1.2.17" % "test"
+            "com.github.bespalovdn" % "scala-log_2.10" % "1.0-SNAPSHOT"
+        )
+        lazy val logImpl = Seq(
+            "org.slf4j" % "slf4j-log4j12" % "1.7.12",
+            "log4j" % "log4j" % "1.2.17"
         )
     }
 }

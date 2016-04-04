@@ -5,7 +5,6 @@ import java.net.InetSocketAddress
 import akka.actor.ActorRef
 import com.github.bespalovdn.asteriskscala.agi.AgiServerActor
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
-import com.github.bespalovdn.asteriskscala.common.test.TestSupportAkka
 
 trait AgiServerSupport extends TestSupportAkka
 {

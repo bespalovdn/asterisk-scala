@@ -1,4 +1,4 @@
-package com.github.bespalovdn.asteriskscala.common.test
+package com.github.bespalovdn.asteriskscala.agitest
 
 import akka.testkit.{ImplicitSender, TestKit, TestKitBase}
 import com.github.bespalovdn.asteriskscala.common.akka.ActorFactory

@@ -1,8 +1,12 @@
 package com.github.bespalovdn.asteriskscala.agi.request
 
-import com.github.bespalovdn.asteriskscala.common.test.TestSupport
+import org.scalatest._
 
-class LineParserTest extends TestSupport
+class LineParserTest extends FlatSpecLike
+    with Assertions
+    with Matchers
+    with BeforeAndAfterAll
+    with BeforeAndAfterEach
 {
     "LineParserTest" should
     "check correctness parsing the AGI variables" in {
