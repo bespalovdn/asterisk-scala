@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 
 import com.github.bespalovdn.scalalog.StaticLogger
-import org.apache.log4j.Level
 import org.apache.log4j.xml.DOMConfigurator
+import org.apache.log4j.{Level, LogManager => Log4jLogManager}
 import org.scalatest._
 
 import scala.xml.{Elem, NodeSeq}
