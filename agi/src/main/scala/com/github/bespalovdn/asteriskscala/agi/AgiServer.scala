@@ -5,6 +5,7 @@ import java.net.InetSocketAddress
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
 import com.github.bespalovdn.asteriskscala.common.concurrent.FutureConversions
+import com.github.bespalovdn.scalalog.StaticLogger
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel._
 import io.netty.channel.nio.NioEventLoopGroup
@@ -16,7 +17,7 @@ import scala.concurrent.{Future, Promise}
 class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFactory)
     extends AsyncActionSupport
     with FutureConversions
-    with LoggerSupport
+    with StaticLogger
 {
     def run(): LifeTime = {
         logger.info("Starting server on %s...".format(bindAddr))
@@ -59,6 +60,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
 
     /**
      * Represents this server's lifetime.
+ *
      * @param channel Represents connection channel in terms of Netty.
      * @param cleanup The cleanup function, which should be called when channel is closed.
      */
@@ -78,6 +80,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
 
         /**
          * Ask the server to stop.
+ *
          * @return Future which completes when server stopped.
          */
         def stop(): Future[Unit] = (channel >>= {_.close().asScala}) >> stopped

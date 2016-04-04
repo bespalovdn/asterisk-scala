@@ -2,9 +2,11 @@ package com.github.bespalovdn.asteriskscala.agi.execution
 
 import java.util.concurrent._
 
+import com.github.bespalovdn.scalalog.StaticLogger
+
 import scala.concurrent.ExecutionContext
 
-object AsyncExecutorService extends LoggerSupport
+object AsyncExecutorService extends StaticLogger
 {
     lazy val context: ExecutionContext = new ExecutionContext {
         override def reportFailure(t: Throwable): Unit = AsyncExecutorService.reporter(t)

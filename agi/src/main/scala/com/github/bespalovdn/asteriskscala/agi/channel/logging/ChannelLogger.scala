@@ -1,24 +1,14 @@
 package com.github.bespalovdn.asteriskscala.agi.channel.logging
 
 import com.github.bespalovdn.asteriskscala.agi.handler.ChannelHandlerContextProvider
-import com.github.bespalovdn.scalalog.Logger
-import io.netty.channel.{Channel, ChannelHandlerContext}
+import com.github.bespalovdn.scalalog.DynamicLogger
 
-import scala.reflect.ClassTag
-
-object ChannelLogger{
-    def apply[T]()(implicit provider: ChannelHandlerContextProvider, classTag: ClassTag[T]): Logger =
-        new ChannelLogger[T](provider).logger
-}
-
-private class ChannelLogger[T](val provider: ChannelHandlerContextProvider)
-                              (implicit classTag: ClassTag[T])
-    extends ChannelLoggerSupport
-    with ChannelHandlerContextProvider
+trait ChannelLogger extends DynamicLogger
 {
-    override def context: ChannelHandlerContext = provider.context
+    this: ChannelHandlerContextProvider =>
 
-    override protected[logging] def loggerTag(chan: Channel): String = "(" + chan.hashCode().toString + ")"
-
-    override def loggerClass: Class[_] = classTag.runtimeClass
+    override def loggerMDC: Map[String, String] = Option(context).map(_.channel()) match {
+        case Some(chan) => super.loggerMDC + ("channel" -> chan.hashCode().toString)
+        case None => super.loggerMDC
+    }
 }

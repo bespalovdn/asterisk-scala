@@ -5,6 +5,7 @@ import java.net.InetSocketAddress
 import akka.actor.Actor
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
 import com.github.bespalovdn.asteriskscala.common.concurrent.FutureExtensions
+import com.github.bespalovdn.scalalog.StaticLogger
 
 import scala.concurrent.duration._
 
@@ -12,7 +13,7 @@ class AgiServerActor (bindAddr: InetSocketAddress,
                       handlerFactory: AgiRequestHandlerFactory,
                       recoveryInterval: FiniteDuration = 30 seconds)
     extends Actor
-    with LoggerSupport
+    with StaticLogger
     with FutureExtensions
 {
     var lifetime: AgiServer#LifeTime = null

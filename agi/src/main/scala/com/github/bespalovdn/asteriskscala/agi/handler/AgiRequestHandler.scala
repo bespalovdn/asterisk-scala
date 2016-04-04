@@ -1,23 +1,24 @@
 package com.github.bespalovdn.asteriskscala.agi.handler
 
 import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
-import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLoggerSupport
+import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLogger
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
 import com.github.bespalovdn.asteriskscala.agi.command.response.{FailResponse, SuccessResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
+import com.github.bespalovdn.scalalog.LoggerProxy
 import io.netty.channel.{Channel, ChannelHandlerContext}
 
 import scala.concurrent.Future
 
 trait AgiRequestHandler
     extends ChannelHandlerContextProvider
-    with ChannelLoggerSupport
+    with ChannelLogger
     with AsyncActionSupport
     with AgiCommandSender
 {
-    self =>
+    selfRef =>
 
     def handle(request: AgiRequest): Future[Unit]
 
@@ -41,16 +42,16 @@ trait AgiRequestHandler
         with AgiCommandResponseChannelHandlerProvider
         with PipelineBuilderFactory
     {
-        override lazy val agiRequestChannelHandler = new AgiRequestChannelHandler {
-            override def logger: Logger = self.logger
-            override def agiRequestHandlerImpl: AgiRequestHandler = self
-            override def contextHolder: ChannelHandlerContextHolder = self.impl
+        override lazy val agiRequestChannelHandler = new AgiRequestChannelHandler with LoggerProxy {
+            override def loggerSource = selfRef
+            override def agiRequestHandlerImpl: AgiRequestHandler = selfRef
+            override def contextHolder: ChannelHandlerContextHolder = selfRef.impl
             override def interactionBuilder: PipelineBuilder = impl.interactionBuilder
         }
 
-        override lazy val agiCommandResponseChannelHandler = new AgiCommandResponseChannelHandler{
-            override def contextProvider: ChannelHandlerContextProvider = self
-            override def logger: Logger = self.logger
+        override lazy val agiCommandResponseChannelHandler = new AgiCommandResponseChannelHandler with LoggerProxy {
+            override def contextProvider: ChannelHandlerContextProvider = selfRef
+            override def loggerSource = selfRef
         }
     }
 }

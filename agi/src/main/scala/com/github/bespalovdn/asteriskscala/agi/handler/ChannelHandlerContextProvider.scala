@@ -4,5 +4,5 @@ import io.netty.channel.ChannelHandlerContext
 
 trait ChannelHandlerContextProvider
 {
-    def context: ChannelHandlerContext
+    implicit def context: ChannelHandlerContext
 }
