@@ -16,6 +16,7 @@ object Build extends sbt.Build
     lazy val common = library("common")
 
     private def library(path: String): Project = Project(path, file(path)).
+        settings(resolvers += "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots").
         settings(libraryDependencies ++= dependency.akka ++ dependency.logItf ++ Seq(
             dependency.netty,
             dependency.scalaArm,
@@ -31,7 +32,7 @@ object Build extends sbt.Build
         lazy val scalaTest = "org.scalatest" %% "scalatest" % "2.2.5"
         lazy val logItf = Seq(
             "org.slf4j" % "slf4j-api" % "1.7.12",
-            "com.github.bespalovdn" % "scala-log_2.10" % "1.0-SNAPSHOT"
+            "com.github.bespalovdn" %% "scala-log" % "1.0-SNAPSHOT"
         )
         lazy val logImpl = Seq(
             "org.slf4j" % "slf4j-log4j12" % "1.7.12",

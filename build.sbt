@@ -10,6 +10,5 @@ scalacOptions in ThisBuild ++= Seq(
 )
 
 resolvers ++= Seq(
-    "java.net repo" at "http://download.java.net/maven/2/",
     "sbt-plugin-releases" at "http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases/"
 )
