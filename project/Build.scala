@@ -20,7 +20,8 @@ object Build extends sbt.Build
         settings(libraryDependencies ++= dependency.akka ++ dependency.logItf ++ Seq(
             dependency.netty,
             dependency.scalaArm,
-            dependency.scalaTest))
+            dependency.scalaTest,
+            dependency.scalaz))
 
     private object dependency {
         lazy val akka = Seq(
@@ -30,6 +31,7 @@ object Build extends sbt.Build
         lazy val netty = "io.netty" % "netty-all" % "4.0.13.Final"
         lazy val scalaArm = "com.jsuereth" %% "scala-arm" % "1.4"
         lazy val scalaTest = "org.scalatest" %% "scalatest" % "2.2.5"
+        lazy val scalaz = "org.scalaz" %% "scalaz-core" % "7.2.2"
         lazy val logItf = Seq(
             "org.slf4j" % "slf4j-api" % "1.7.12",
             "com.github.bespalovdn" %% "scala-log" % "v1.2"
