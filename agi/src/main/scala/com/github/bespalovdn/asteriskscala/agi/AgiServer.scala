@@ -3,8 +3,8 @@ package com.github.bespalovdn.asteriskscala.agi
 import java.net.InetSocketAddress
 
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
+import com.github.bespalovdn.asteriskscala.agi.future.FutureConversions
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
-import com.github.bespalovdn.asteriskscala.common.concurrent.FutureConversions
 import com.github.bespalovdn.scalalog.StaticLogger
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel._
