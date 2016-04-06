@@ -19,18 +19,18 @@ class ChannelStatus private (val channel: Option[String]) extends AgiCommandImpl
     }}
 
     override def send()(implicit sender: AgiCommandSender): Future[ChannelStatusResponse] =
-        sender.send(this) >>= toResult
+        sender.send(this) map toResult
 
-    private def toResult(origin: SuccessResponse): Future[ChannelStatusResponse] = origin.resultCode match {
-        case "0" => ChannelStatusResponse.ChannelDownAndAvailable(origin).toFuture
-        case "1" => ChannelStatusResponse.ChannelDownButReserved(origin).toFuture
-        case "2" => ChannelStatusResponse.ChannelIsOffHook(origin).toFuture
-        case "3" => ChannelStatusResponse.DigitsBeenDialed(origin).toFuture
-        case "4" => ChannelStatusResponse.LineIsRinging(origin).toFuture
-        case "5" => ChannelStatusResponse.RemoteIsRinging(origin).toFuture
-        case "6" => ChannelStatusResponse.LineIsUp(origin).toFuture
-        case "7" => ChannelStatusResponse.LineIsBusy(origin).toFuture
-        case other => throw new Exception("Unexpected channel status: " + other)
+    private def toResult(origin: SuccessResponse): ChannelStatusResponse = origin.resultCode match {
+        case "0" => ChannelStatusResponse.ChannelDownAndAvailable(origin)
+        case "1" => ChannelStatusResponse.ChannelDownButReserved(origin)
+        case "2" => ChannelStatusResponse.ChannelIsOffHook(origin)
+        case "3" => ChannelStatusResponse.DigitsBeenDialed(origin)
+        case "4" => ChannelStatusResponse.LineIsRinging(origin)
+        case "5" => ChannelStatusResponse.RemoteIsRinging(origin)
+        case "6" => ChannelStatusResponse.LineIsUp(origin)
+        case "7" => ChannelStatusResponse.LineIsBusy(origin)
+        case other => throw new RuntimeException("Unexpected channel status: " + other)
     }
 }
 

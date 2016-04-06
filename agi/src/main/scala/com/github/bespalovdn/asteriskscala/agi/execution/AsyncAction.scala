@@ -10,4 +10,8 @@ trait AsyncAction extends FutureInstances with ToTypeClassOps
     implicit def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.global
 
     implicit def any2unit[A](a: Future[A]): Future[Unit] = a >> ().point[Future]
+
+    implicit class ToFutureSupport[A](a: A){
+        def toFuture: Future[A] = a.point[Future]
+    }
 }
