@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
 import com.github.bespalovdn.asteriskscala.agi.command.response.{ChannelStatusResponse, SuccessResponse}
-import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
 
 import scala.concurrent.Future
@@ -11,7 +11,7 @@ import scala.concurrent.Future
  * If no channel name is given the returns the status of the current channel.
  * [[http://www.voip-info.org/wiki/view/channel+status]]
  */
-class ChannelStatus private (val channel: Option[String]) extends AgiCommandImpl with AgiAction
+class ChannelStatus private (val channel: Option[String]) extends AgiCommandImpl with AsyncAction
 {
     override def toString: String = "CHANNEL STATUS" + {channel match {
         case Some(chan) => " " + chan.escaped

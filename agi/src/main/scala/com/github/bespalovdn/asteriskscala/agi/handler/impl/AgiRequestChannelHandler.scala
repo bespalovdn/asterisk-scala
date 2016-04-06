@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.handler.impl
 
 import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
-import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandler
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import com.github.bespalovdn.scalalog.LoggerSupport
@@ -9,7 +9,7 @@ import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 
 private [handler]
 abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiRequest]
-    with AgiAction
+    with AsyncAction
     with LoggerSupport
 {
     def contextHolder: ChannelHandlerContextHolder

@@ -2,7 +2,7 @@ package com.github.bespalovdn.asteriskscala.agi
 
 import java.net.InetSocketAddress
 
-import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.future.FutureConversions
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
 import com.github.bespalovdn.scalalog.StaticLogger
@@ -15,7 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import scala.concurrent.{Future, Promise}
 
 class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFactory)
-    extends AgiAction
+    extends AsyncAction
     with FutureConversions
     with StaticLogger
 {

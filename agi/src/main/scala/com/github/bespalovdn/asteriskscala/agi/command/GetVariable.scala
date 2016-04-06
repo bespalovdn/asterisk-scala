@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
 import com.github.bespalovdn.asteriskscala.agi.command.response.{GetVariableResponse, SuccessResponse}
-import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
 
 import scala.concurrent.Future
@@ -12,7 +12,7 @@ import scala.concurrent.Future
  *
  * @param variable Name of the variable.
  */
-class GetVariable private (val variable: String) extends AgiCommandImpl with AgiAction
+class GetVariable private (val variable: String) extends AgiCommandImpl with AsyncAction
 {
     override def toString: String = "GET VARIABLE " + variable.escaped
 

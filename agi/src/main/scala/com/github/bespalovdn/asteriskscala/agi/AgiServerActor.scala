@@ -3,10 +3,11 @@ package com.github.bespalovdn.asteriskscala.agi
 import java.net.InetSocketAddress
 
 import akka.actor.Actor
+import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
-import com.github.bespalovdn.asteriskscala.common.concurrent.FutureExtensions
 import com.github.bespalovdn.scalalog.StaticLogger
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class AgiServerActor (bindAddr: InetSocketAddress,
@@ -14,7 +15,7 @@ class AgiServerActor (bindAddr: InetSocketAddress,
                       recoveryInterval: FiniteDuration = 30 seconds)
     extends Actor
     with StaticLogger
-    with FutureExtensions
+    with AsyncAction
 {
     var lifetime: AgiServer#LifeTime = null
     var stopped = false
@@ -40,9 +41,8 @@ class AgiServerActor (bindAddr: InetSocketAddress,
 
     def startServer(): Unit ={
         try {
-            import context.dispatcher
             lifetime = new AgiServer(bindAddr, handlerFactory).run()
-            lifetime.stopped >> (self ! InternalMsg.Stopped).toFuture
+            lifetime.stopped >> (self ! InternalMsg.Stopped).point[Future]
             stopped = false
         }catch{
             case e: Throwable =>

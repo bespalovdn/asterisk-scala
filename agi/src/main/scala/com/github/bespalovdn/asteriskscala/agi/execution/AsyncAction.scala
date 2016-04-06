@@ -5,7 +5,7 @@ import scala.language.implicitConversions
 import scalaz.std.FutureInstances
 import scalaz.syntax.ToTypeClassOps
 
-trait AgiAction extends FutureInstances with ToTypeClassOps
+trait AsyncAction extends FutureInstances with ToTypeClassOps
 {
     implicit def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.global
 
