@@ -2,7 +2,7 @@ package com.github.bespalovdn.asteriskscala.agi
 
 import java.net.InetSocketAddress
 
-import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
+import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
 import com.github.bespalovdn.asteriskscala.agi.future.FutureConversions
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiRequestHandlerFactory
 import com.github.bespalovdn.scalalog.StaticLogger
@@ -15,7 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import scala.concurrent.{Future, Promise}
 
 class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFactory)
-    extends AsyncActionSupport
+    extends AgiAction
     with FutureConversions
     with StaticLogger
 {
@@ -51,7 +51,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
             val f2 = childGroup.shutdownGracefully().asScala
             val cleanup = f1 >> f2
             cleanup onComplete {_ => logger.info("Server stopped.")}
-            cleanup >> ().toFuture
+            cleanup
         }
         val lifetime = new LifeTime(channelPromise.future, cleanup)
         lifetime.started onComplete {_ => logger.info("Server started.")}
@@ -69,13 +69,14 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
         /**
          * Returns `started` future, which completes when server started.
          */
-        val started: Future[Unit] = channel >> ().toFuture
+        val started: Future[Unit] = channel >> ().point[Future]
 
         /**
          * Returns `stopped` future, which completes when server stopped.
          */
-        val stopped: Future[Unit] = {channel >>= {_.closeFuture().asScala}} >> ().toFuture
+        val stopped: Future[Unit] = {channel >>= {_.closeFuture().asScala}}
 
+        // schedule cleanup:
         stopped onComplete {_ => cleanup()}
 
         /**

@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
 import com.github.bespalovdn.asteriskscala.agi.command.response.{DatabaseGetResponse, FailResponse, SuccessResponse}
-import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
+import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
 
 import scala.concurrent.Future
@@ -41,7 +41,7 @@ object Database
      * Retrieves an entry in the Asterisk database for a given family and key.
      * [[http://www.voip-info.org/wiki/view/database+get]]
      */
-    class Get private (val family: String, val key: String) extends AgiCommandImpl with AsyncActionSupport{
+    class Get private (val family: String, val key: String) extends AgiCommandImpl with AgiAction{
         override def toString = "DATABASE GET %s %s".format(family.escaped, key.escaped)
 
         override def send()(implicit sender: AgiCommandSender): Future[DatabaseGetResponse] =
@@ -60,7 +60,7 @@ object Database
      * Adds or updates an entry in the Asterisk database for a given family, key, and value.
      * [[http://www.voip-info.org/wiki/view/database+put]]
      */
-    class Put private (val family: String, val key: String, val value: String) extends AgiCommandImpl with AsyncActionSupport{
+    class Put private (val family: String, val key: String, val value: String) extends AgiCommandImpl with AgiAction{
         override def toString = "DATABASE PUT %s %s %s".format(family.escaped, key.escaped, value.escaped)
 
         override def send()(implicit sender: AgiCommandSender): Future[SuccessResponse] =

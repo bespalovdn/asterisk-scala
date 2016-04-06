@@ -1,7 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
 import com.github.bespalovdn.asteriskscala.agi.command.response.{GetVariableResponse, SuccessResponse}
-import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
+import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
 
 import scala.concurrent.Future
@@ -9,9 +9,10 @@ import scala.concurrent.Future
 /**
  * Retrieves AGI variable from current context.
  * [[http://www.voip-info.org/wiki/view/get+variable]]
+ *
  * @param variable Name of the variable.
  */
-class GetVariable private (val variable: String) extends AgiCommandImpl with AsyncActionSupport
+class GetVariable private (val variable: String) extends AgiCommandImpl with AgiAction
 {
     override def toString: String = "GET VARIABLE " + variable.escaped
 

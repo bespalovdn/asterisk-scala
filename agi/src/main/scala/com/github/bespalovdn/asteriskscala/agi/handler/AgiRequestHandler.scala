@@ -4,7 +4,7 @@ import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLogger
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
 import com.github.bespalovdn.asteriskscala.agi.command.response.{FailResponse, SuccessResponse}
-import com.github.bespalovdn.asteriskscala.agi.execution.AsyncActionSupport
+import com.github.bespalovdn.asteriskscala.agi.execution.AgiAction
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
 import com.github.bespalovdn.scalalog.LoggerProxy
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 trait AgiRequestHandler
     extends ChannelHandlerContextProvider
     with ChannelLogger
-    with AsyncActionSupport
+    with AgiAction
     with AgiCommandSender
 {
     selfRef =>
