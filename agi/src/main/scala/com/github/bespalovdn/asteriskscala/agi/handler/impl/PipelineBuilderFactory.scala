@@ -6,7 +6,8 @@ import io.netty.channel.ChannelPipeline
 
 trait PipelineBuilderFactory
 {
-    this: AgiRequestChannelHandlerProvider with AgiCommandResponseChannelHandlerProvider =>
+    def agiRequestChannelHandler: AgiRequestChannelHandler
+    def agiCommandResponseChannelHandler: AgiCommandResponseChannelHandler
 
     def initialBuilder: PipelineBuilder = new PipelineBuilder {
         override def addDecoders(pipe: ChannelPipeline): Unit = {

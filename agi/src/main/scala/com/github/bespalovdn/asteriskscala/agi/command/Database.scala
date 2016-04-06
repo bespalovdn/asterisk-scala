@@ -16,7 +16,7 @@ object Database
      * Deletes an entry in the Asterisk database for a given family and key.
      * [[http://www.voip-info.org/wiki/view/database+del]]
      */
-    class Del private (val family: String, val key: String) extends AgiCommandImpl {
+    class Del private (val family: String, val key: String) extends AgiCommand {
         override def toString: String = "DATABASE DEL %s %s".format(family.escaped, key.escaped)
     }
     object Del {
@@ -27,7 +27,7 @@ object Database
      * Deletes a family or specific keytree withing a family in the Asterisk database.
      * [[http://www.voip-info.org/wiki/view/database+deltree]]
      */
-    class Deltree private (val family: String, val keytree: Option[String]) extends AgiCommandImpl{
+    class Deltree private (val family: String, val keytree: Option[String]) extends AgiCommand{
         override def toString = "DATABASE DELTREE " + family.escaped + {keytree match {
             case Some(tree) => " " + tree.escaped
             case None => ""
@@ -41,11 +41,11 @@ object Database
      * Retrieves an entry in the Asterisk database for a given family and key.
      * [[http://www.voip-info.org/wiki/view/database+get]]
      */
-    class Get private (val family: String, val key: String) extends AgiCommandImpl with AsyncAction{
+    class Get private (val family: String, val key: String) extends AgiCommand with AsyncAction{
         override def toString = "DATABASE GET %s %s".format(family.escaped, key.escaped)
 
         override def send()(implicit handler: AgiHandler): Future[DatabaseGetResponse] =
-            sender.send(this) >>= toResult
+            handler.send(this) >>= toResult
 
         private def toResult(origin: SuccessResponse): Future[DatabaseGetResponse] = origin.resultCode match {
             case "0" => DatabaseGetResponse.NotSet(origin).toFuture
@@ -60,11 +60,11 @@ object Database
      * Adds or updates an entry in the Asterisk database for a given family, key, and value.
      * [[http://www.voip-info.org/wiki/view/database+put]]
      */
-    class Put private (val family: String, val key: String, val value: String) extends AgiCommandImpl with AsyncAction{
+    class Put private (val family: String, val key: String, val value: String) extends AgiCommand with AsyncAction{
         override def toString = "DATABASE PUT %s %s %s".format(family.escaped, key.escaped, value.escaped)
 
         override def send()(implicit handler: AgiHandler): Future[SuccessResponse] =
-            sender.send(this) >>= toResult
+            handler.send(this) >>= toResult
 
         private def toResult(origin: SuccessResponse): Future[SuccessResponse] = origin.resultCode match {
             case "0" => throw FailResponse.Failure("result=0")

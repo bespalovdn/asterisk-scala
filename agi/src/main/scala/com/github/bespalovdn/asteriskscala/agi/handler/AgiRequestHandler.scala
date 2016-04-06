@@ -14,9 +14,9 @@ import scala.concurrent.Future
 
 trait AgiRequestHandler
     extends ChannelHandlerContextProvider
-    with ChannelLogger
     with AsyncAction
     with AgiHandler
+    with ChannelLogger
 {
     selfRef =>
 
@@ -35,12 +35,7 @@ trait AgiRequestHandler
 
     override def context: ChannelHandlerContext = impl.context
 
-    protected implicit def agiCommandHandler: AgiHandler = this //TODO: remove?
-
-    private object impl extends ChannelHandlerContextHolder
-        with AgiRequestChannelHandlerProvider
-        with AgiCommandResponseChannelHandlerProvider
-        with PipelineBuilderFactory
+    private object impl extends ChannelHandlerContextHolder with PipelineBuilderFactory
     {
         override lazy val agiRequestChannelHandler = new AgiRequestChannelHandler with LoggerProxy {
             override def loggerSource = selfRef
@@ -48,7 +43,6 @@ trait AgiRequestHandler
             override def contextHolder: ChannelHandlerContextHolder = selfRef.impl
             override def interactionBuilder: PipelineBuilder = impl.interactionBuilder
         }
-
         override lazy val agiCommandResponseChannelHandler = new AgiCommandResponseChannelHandler with LoggerProxy {
             override def contextProvider: ChannelHandlerContextProvider = selfRef
             override def loggerSource = selfRef

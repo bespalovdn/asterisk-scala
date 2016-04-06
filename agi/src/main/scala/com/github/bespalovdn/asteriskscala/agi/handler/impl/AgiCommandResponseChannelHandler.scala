@@ -38,9 +38,3 @@ abstract class AgiCommandResponseChannelHandler extends SimpleChannelInboundHand
 
     private var responsePromise: Option[Promise[AgiResponse]] = None
 }
-
-private [handler]
-trait AgiCommandResponseChannelHandlerProvider
-{
-    def agiCommandResponseChannelHandler: AgiCommandResponseChannelHandler
-}

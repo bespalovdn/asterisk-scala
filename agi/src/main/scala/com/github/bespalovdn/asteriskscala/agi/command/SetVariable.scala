@@ -6,7 +6,7 @@ package com.github.bespalovdn.asteriskscala.agi.command
  * @param name Name of variable.
  * @param value Value to set.
  */
-class SetVariable private (val name: String, val value: String) extends AgiCommandImpl
+class SetVariable private (val name: String, val value: String) extends AgiCommand
 {
     override def toString: String = "SET VARIABLE %s %s".format(name.escaped, value.escaped)
 }

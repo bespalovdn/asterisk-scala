@@ -12,12 +12,12 @@ import scala.concurrent.Future
  *
  * @param variable Name of the variable.
  */
-class GetVariable private (val variable: String) extends AgiCommandImpl with AsyncAction
+class GetVariable private (val variable: String) extends AgiCommand with AsyncAction
 {
     override def toString: String = "GET VARIABLE " + variable.escaped
 
     override def send()(implicit handler: AgiHandler): Future[GetVariableResponse] =
-        sender.send(this) >>= toResult
+        handler.send(this) >>= toResult
 
     private def toResult(origin: SuccessResponse): Future[GetVariableResponse] =
         if(origin.resultCode == "0") GetVariableResponse.NotSet(origin).toFuture

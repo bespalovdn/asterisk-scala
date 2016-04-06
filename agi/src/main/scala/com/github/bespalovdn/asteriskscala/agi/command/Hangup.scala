@@ -1,8 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.handler.AgiHandler
-
-import scala.concurrent.Future
+import com.github.bespalovdn.asteriskscala.common.protocol.AsteriskFormatter
 
 /**
  * Hangs up the specified channel.
@@ -10,16 +8,17 @@ import scala.concurrent.Future
   *
   * @param channel The channel to hang up.
  */
-class Hangup private (val channel: String) extends AgiCommandImpl
+class Hangup private (val channel: String) extends AgiCommand
 {
-    override def toString: String = "HANGUP %s" format channel.escaped
+    override def toString: String = {
+        import AsteriskFormatter._
+        "HANGUP " + channel.escaped
+    }
 }
 
 object Hangup extends AgiCommand
 {
     override def toString: String = "HANGUP"
-
-    override def send()(implicit handler: AgiHandler): Future[SuccessResponse] = sender.send(this)
 
     def apply(channel: String) = new Hangup(channel)
 }

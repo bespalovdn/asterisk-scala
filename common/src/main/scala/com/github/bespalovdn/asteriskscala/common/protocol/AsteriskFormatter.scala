@@ -1,6 +1,6 @@
 package com.github.bespalovdn.asteriskscala.common.protocol
 
-trait AsteriskFormatter
+object AsteriskFormatter
 {
     implicit class EscapeAndQuoteString(value: String){
         def escaped: String = escapeAndQuote(value)

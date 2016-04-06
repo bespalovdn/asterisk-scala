@@ -6,7 +6,7 @@ package com.github.bespalovdn.asteriskscala.agi.command
  * @param application Application to be executed.
  * @param options List of application's options.
  */
-class Exec private (val application: String, val options: Seq[String]) extends AgiCommandImpl
+class Exec private (val application: String, val options: Seq[String]) extends AgiCommand
 {
     override def toString: String = "EXEC %s %s".format(application.escaped, options.escaped)
 }

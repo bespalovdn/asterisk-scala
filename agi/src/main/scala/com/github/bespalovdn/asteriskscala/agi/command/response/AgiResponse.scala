@@ -2,8 +2,8 @@ package com.github.bespalovdn.asteriskscala.agi.command.response
 
 trait AgiResponse
 {
-    def resultCode: String
-    def resultExtra: String
+    def resultCode: String = ""
+    def resultExtra: String = ""
 }
 
 object AgiResponse
@@ -22,11 +22,11 @@ object AgiResponse
     }
 
     private def success(line: String): AgiResponse = new AgiResponse {
-        lazy val resultCode: String = {
+        override lazy val resultCode: String = {
             val regex = """200 result=(.+)""".r
             line match {case regex(code) => code}
         }
-        lazy val resultExtra: String = {
+        override lazy val resultExtra: String = {
             val regex = """200 result=\S+ \((.*)\)""".r
             line match {case regex(a) => a}
         }
@@ -36,11 +36,6 @@ object AgiResponse
 }
 
 trait FailResponse extends Throwable with AgiResponse
-{
-    override def resultCode: String = ""
-    override def resultExtra: String = ""
-}
-
 object FailResponse
 {
     case object InvalidCommand extends Exception("Invalid command.") with FailResponse
