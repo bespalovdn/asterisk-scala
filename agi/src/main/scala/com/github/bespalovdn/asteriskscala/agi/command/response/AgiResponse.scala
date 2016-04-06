@@ -4,6 +4,8 @@ trait AgiResponse
 {
     def resultCode: String = ""
     def resultExtra: String = ""
+
+    override def toString = s"${getClass.getSimpleName}: resultCode=[$resultCode] resultExtra=[$resultExtra]"
 }
 
 object AgiResponse

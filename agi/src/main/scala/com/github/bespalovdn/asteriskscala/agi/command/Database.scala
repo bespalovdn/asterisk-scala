@@ -1,8 +1,9 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.command.response.{DatabaseGetResponse, FailResponse}
+import com.github.bespalovdn.asteriskscala.agi.command.response.{AgiResponse, DatabaseGetResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiHandler
+import com.github.bespalovdn.asteriskscala.common.protocol.AsteriskFormatter
 
 import scala.concurrent.Future
 
@@ -17,7 +18,10 @@ object Database
      * [[http://www.voip-info.org/wiki/view/database+del]]
      */
     class Del private (val family: String, val key: String) extends AgiCommand {
-        override def toString: String = "DATABASE DEL %s %s".format(family.escaped, key.escaped)
+        override def toString: String = {
+            import AsteriskFormatter._
+            "DATABASE DEL %s %s".format(family.escaped, key.escaped)
+        }
     }
     object Del {
         def apply(family: String, key: String) = new Del(family, key)
@@ -28,10 +32,10 @@ object Database
      * [[http://www.voip-info.org/wiki/view/database+deltree]]
      */
     class Deltree private (val family: String, val keytree: Option[String]) extends AgiCommand{
-        override def toString = "DATABASE DELTREE " + family.escaped + {keytree match {
-            case Some(tree) => " " + tree.escaped
-            case None => ""
-        }}
+        override def toString = {
+            import AsteriskFormatter._
+            "DATABASE DELTREE " + family.escaped + keytree.map(" " + _.escaped).getOrElse("")
+        }
     }
     object Deltree{
         def apply(family: String, keytree: String = null) = new Deltree(family, Option(keytree))
@@ -42,14 +46,22 @@ object Database
      * [[http://www.voip-info.org/wiki/view/database+get]]
      */
     class Get private (val family: String, val key: String) extends AgiCommand with AsyncAction{
-        override def toString = "DATABASE GET %s %s".format(family.escaped, key.escaped)
+        override def toString = {
+            import AsteriskFormatter._
+            "DATABASE GET %s %s" format (family.escaped, key.escaped)
+        }
 
-        override def send()(implicit handler: AgiHandler): Future[DatabaseGetResponse] =
-            handler.send(this) >>= toResult
+        override def send()(implicit handler: AgiHandler): Future[AgiResponse with Option[String]] = for{
+            response: AgiResponse <- handler send this
+            result <- response.resultCode match {
+                case "0" => None
+                case "1" => Some(response.resultExtra)
+            }
+        } yield ???
 
-        private def toResult(origin: SuccessResponse): Future[DatabaseGetResponse] = origin.resultCode match {
-            case "0" => DatabaseGetResponse.NotSet(origin).toFuture
-            case "1" => DatabaseGetResponse.Some(origin.extra)(origin).toFuture
+        private def convert(response: AgiResponse): AgiResponse with Option[String] = response.resultCode match {
+            case "0" => None with AgiResponse
+            case "1" => DatabaseGetResponse.Some(response.resultExtra)(response)
         }
     }
     object Get{
@@ -61,14 +73,19 @@ object Database
      * [[http://www.voip-info.org/wiki/view/database+put]]
      */
     class Put private (val family: String, val key: String, val value: String) extends AgiCommand with AsyncAction{
-        override def toString = "DATABASE PUT %s %s %s".format(family.escaped, key.escaped, value.escaped)
+        override def toString = {
+            import AsteriskFormatter._
+            "DATABASE PUT %s %s %s".format(family.escaped, key.escaped, value.escaped)
+        }
 
-        override def send()(implicit handler: AgiHandler): Future[SuccessResponse] =
-            handler.send(this) >>= toResult
+        override def send()(implicit handler: AgiHandler): Future[AgiResponse] =
+            handler.send(this) >>= checkResult
 
-        private def toResult(origin: SuccessResponse): Future[SuccessResponse] = origin.resultCode match {
-            case "0" => throw FailResponse.Failure("result=0")
-            case "1" => origin.toFuture
+        private def checkResult(response: AgiResponse): Future[AgiResponse] = response.resultCode match {
+            case "0" => throw new DatabaseUpdateException(response.toString)//TODO: maybe Option[String]?
+            case "1" => response.toFuture
         }
     }
+
+    class DatabaseUpdateException(cause: String) extends RuntimeException(cause)
 }

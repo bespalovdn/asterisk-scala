@@ -1,6 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.command.response
 
-sealed trait DatabaseGetResponse extends CustomResponse
+sealed trait DatabaseGetResponse extends AgiResponse
 object DatabaseGetResponse
 {
     case class Some(value: String)(val origin: SuccessResponse) extends DatabaseGetResponse
