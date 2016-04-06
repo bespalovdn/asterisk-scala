@@ -1,8 +1,8 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.command.response.{DatabaseGetResponse, FailResponse, SuccessResponse}
+import com.github.bespalovdn.asteriskscala.agi.command.response.{DatabaseGetResponse, FailResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
-import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
+import com.github.bespalovdn.asteriskscala.agi.handler.AgiHandler
 
 import scala.concurrent.Future
 
@@ -44,7 +44,7 @@ object Database
     class Get private (val family: String, val key: String) extends AgiCommandImpl with AsyncAction{
         override def toString = "DATABASE GET %s %s".format(family.escaped, key.escaped)
 
-        override def send()(implicit sender: AgiCommandSender): Future[DatabaseGetResponse] =
+        override def send()(implicit handler: AgiHandler): Future[DatabaseGetResponse] =
             sender.send(this) >>= toResult
 
         private def toResult(origin: SuccessResponse): Future[DatabaseGetResponse] = origin.resultCode match {
@@ -63,7 +63,7 @@ object Database
     class Put private (val family: String, val key: String, val value: String) extends AgiCommandImpl with AsyncAction{
         override def toString = "DATABASE PUT %s %s %s".format(family.escaped, key.escaped, value.escaped)
 
-        override def send()(implicit sender: AgiCommandSender): Future[SuccessResponse] =
+        override def send()(implicit handler: AgiHandler): Future[SuccessResponse] =
             sender.send(this) >>= toResult
 
         private def toResult(origin: SuccessResponse): Future[SuccessResponse] = origin.resultCode match {

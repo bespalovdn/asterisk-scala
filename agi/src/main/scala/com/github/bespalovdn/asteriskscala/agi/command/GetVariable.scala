@@ -1,8 +1,8 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.command.response.{GetVariableResponse, SuccessResponse}
+import com.github.bespalovdn.asteriskscala.agi.command.response.GetVariableResponse
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
-import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
+import com.github.bespalovdn.asteriskscala.agi.handler.AgiHandler
 
 import scala.concurrent.Future
 
@@ -16,7 +16,7 @@ class GetVariable private (val variable: String) extends AgiCommandImpl with Asy
 {
     override def toString: String = "GET VARIABLE " + variable.escaped
 
-    override def send()(implicit sender: AgiCommandSender): Future[GetVariableResponse] =
+    override def send()(implicit handler: AgiHandler): Future[GetVariableResponse] =
         sender.send(this) >>= toResult
 
     private def toResult(origin: SuccessResponse): Future[GetVariableResponse] =

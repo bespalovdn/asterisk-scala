@@ -1,8 +1,8 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.command.response.{ChannelStatusResponse, SuccessResponse}
+import com.github.bespalovdn.asteriskscala.agi.command.response.ChannelStatusResponse
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
-import com.github.bespalovdn.asteriskscala.agi.handler.AgiCommandSender
+import com.github.bespalovdn.asteriskscala.agi.handler.AgiHandler
 
 import scala.concurrent.Future
 
@@ -18,7 +18,7 @@ class ChannelStatus private (val channel: Option[String]) extends AgiCommandImpl
         case None => ""
     }}
 
-    override def send()(implicit sender: AgiCommandSender): Future[ChannelStatusResponse] =
+    override def send()(implicit handler: AgiHandler): Future[ChannelStatusResponse] =
         sender.send(this) map toResult
 
     private def toResult(origin: SuccessResponse): ChannelStatusResponse = origin.resultCode match {

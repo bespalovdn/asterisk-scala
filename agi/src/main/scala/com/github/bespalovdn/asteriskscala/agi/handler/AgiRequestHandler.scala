@@ -3,7 +3,7 @@ package com.github.bespalovdn.asteriskscala.agi.handler
 import com.github.bespalovdn.asteriskscala.agi.channel.PipelineBuilder
 import com.github.bespalovdn.asteriskscala.agi.channel.logging.ChannelLogger
 import com.github.bespalovdn.asteriskscala.agi.command.AgiCommand
-import com.github.bespalovdn.asteriskscala.agi.command.response.{FailResponse, SuccessResponse}
+import com.github.bespalovdn.asteriskscala.agi.command.response.{AgiResponse, FailResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.impl._
 import com.github.bespalovdn.asteriskscala.agi.request.AgiRequest
@@ -16,13 +16,13 @@ trait AgiRequestHandler
     extends ChannelHandlerContextProvider
     with ChannelLogger
     with AsyncAction
-    with AgiCommandSender
+    with AgiHandler
 {
     selfRef =>
 
     def handle(request: AgiRequest): Future[Unit]
 
-    override def send(command: AgiCommand): Future[SuccessResponse] = impl.agiCommandResponseChannelHandler.send(command)
+    override def send(command: AgiCommand): Future[AgiResponse] = impl.agiCommandResponseChannelHandler.send(command)
 
     def recovery: PartialFunction[Throwable, Future[Unit]] = {
         case err: FailResponse => logger.info("AgiCommand failed: " + err.getMessage).toFuture
@@ -35,7 +35,7 @@ trait AgiRequestHandler
 
     override def context: ChannelHandlerContext = impl.context
 
-    protected implicit def agiCommandSender: AgiCommandSender = this
+    protected implicit def agiCommandHandler: AgiHandler = this //TODO: remove?
 
     private object impl extends ChannelHandlerContextHolder
         with AgiRequestChannelHandlerProvider
