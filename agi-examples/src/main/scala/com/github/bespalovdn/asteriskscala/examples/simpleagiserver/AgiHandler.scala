@@ -9,7 +9,7 @@ import scala.concurrent.Future
 class AgiHandler extends AgiRequestHandler
 {
     override def handle(request: AgiRequest): Future[Unit] = {
-        Playback("demo-congrats").send() >> Hangup.send() >> ().toFuture
+        Playback("demo-congrats").send() >> Hangup.send()
     }
 }
 

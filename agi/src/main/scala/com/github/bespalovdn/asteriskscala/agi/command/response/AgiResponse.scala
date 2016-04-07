@@ -2,55 +2,53 @@ package com.github.bespalovdn.asteriskscala.agi.command.response
 
 trait AgiResponse
 {
-    def response: String
+    def resultCode: String
+    def resultExtra: String
+
+    override def toString = s"${getClass.getSimpleName}: resultCode=[$resultCode] resultExtra=[$resultExtra]"
 }
 
 object AgiResponse
 {
     def apply(line: String): AgiResponse = line.take(3) match {
-        case "200" => if(line == "200 result=-1") FailResponse.Failure(line) else success(line)
-        case _ => fail(line)
-    }
-
-    private def success(line: String): SuccessResponse = new SuccessResponse {
-        override def response: String = line
-    }
-
-    private def fail(line: String): FailResponse = line.take(3) match {
-        case "510" => FailResponse.InvalidCommand(line)
-        case "511" => FailResponse.ChannelIsDead(line)
-        case "520" => FailResponse.InvalidSyntax(line)
-        case _ =>
+        case "200" => success(line)
+        case "510" => FailResponse.InvalidCommand
+        case "511" => FailResponse.ChannelIsDead
+        case "520" => FailResponse.InvalidSyntax
+        case _ if line.startsWith("HANGUP") =>
             // according to http://www.asteriskdocs.org/en/3rd_Edition/asterisk-book-html-chunk/AGI-communication.html
             // if a channel hangs up while your AGI application is still executing, the asterisk will send a line,
             // containing the word HANGUP:
-            if(line.startsWith("HANGUP"))
-                FailResponse.ChannelIsDead(line)
-            else
-                throw new InvalidAgiResponseException(line)
+            FailResponse.ChannelIsDead
+        case _ => new InvalidAgiResponseException(line) with FailResponse
     }
 
-    class InvalidAgiResponseException(line: String) extends Exception("Unexpected AGI response: " + line)
+    private def success(line: String): AgiResponse = new AgiResponse {
+        override lazy val resultCode: String = {
+            val regex = """200 result=(.+)""".r
+            line match {case regex(code) => code}
+        }
+        override lazy val resultExtra: String = {
+            val regex = """200 result=\S+ \((.*)\)""".r
+            line match {case regex(a) => a}
+        }
+    }
+
+    class InvalidAgiResponseException(line: String) extends RuntimeException("Unexpected AGI response: " + line)
 }
 
-trait SuccessResponse extends AgiResponse
-{
-    lazy val resultCode: String = {
-        val regex = """200 result=(.+)""".r
-        response match {case regex(code) => code}
-    }
-
-    lazy val extra: String = {
-        val regex = """200 result=\S+ \((.*)\)""".r
-        response match {case regex(a) => a}
-    }
+trait FailResponse extends Throwable with AgiResponse{
+    override def resultCode: String = ""
+    override def resultExtra: String = ""
 }
-
-sealed trait FailResponse extends Throwable with AgiResponse
 object FailResponse
 {
-    case class InvalidCommand(response: String) extends Exception("Invalid command.") with FailResponse // 510 code
-    case class ChannelIsDead(response: String) extends Exception("Channel is dead.") with FailResponse // 511 code
-    case class InvalidSyntax(response: String) extends Exception("Invalid command syntax.") with FailResponse // 520 code
-    case class Failure(response: String) extends Exception("Failure: " + response) with FailResponse // other error (e.g. 200 result=-1)
+    case object InvalidCommand extends Exception("Invalid command.") with FailResponse
+    case object ChannelIsDead extends Exception("Channel is dead.") with FailResponse
+    case object InvalidSyntax extends Exception("Invalid command syntax.") with FailResponse
+}
+
+abstract class CustomAgiResponse(source: AgiResponse) extends AgiResponse{
+    override def resultCode: String = source.resultCode
+    override def resultExtra: String = source.resultExtra
 }

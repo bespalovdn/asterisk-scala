@@ -36,9 +36,3 @@ abstract class AgiRequestChannelHandler extends SimpleChannelInboundHandler[AgiR
         interactionBuilder.build(pipe)
     }
 }
-
-private [handler]
-trait AgiRequestChannelHandlerProvider
-{
-    def agiRequestChannelHandler: AgiRequestChannelHandler
-}
