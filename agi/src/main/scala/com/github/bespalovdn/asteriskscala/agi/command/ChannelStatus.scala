@@ -40,15 +40,15 @@ object ChannelStatus
     def apply() = new ChannelStatus(None)
     def apply(channel: String) = new ChannelStatus(Some(channel))
 
-    sealed trait Response extends CustomAgiResponse
+    sealed trait Response extends AgiResponse
     object Response {
-        class ChannelDownAndAvailable(source: AgiResponse) extends Response
-        class ChannelDownButReserved(source: AgiResponse) extends Response
-        class ChannelIsOffHook(source: AgiResponse) extends Response
-        class DigitsBeenDialed(source: AgiResponse) extends Response
-        class LineIsRinging(source: AgiResponse) extends Response
-        class RemoteIsRinging(source: AgiResponse) extends Response
-        class LineIsUp(source: AgiResponse) extends Response
-        class LineIsBusy(source: AgiResponse) extends Response
+        class ChannelDownAndAvailable(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class ChannelDownButReserved(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class ChannelIsOffHook(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class DigitsBeenDialed(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class LineIsRinging(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class RemoteIsRinging(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class LineIsUp(source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class LineIsBusy(source: AgiResponse) extends CustomAgiResponse(source) with Response
     }
 }

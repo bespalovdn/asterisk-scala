@@ -55,22 +55,22 @@ object Database
             "DATABASE GET %s %s" format (family.escaped, key.escaped)
         }
 
-        override def send()(implicit handler: AgiHandler): Future[Get.Response] = for{
-            response: AgiResponse <- handler send this
-            result <- response.resultCode match {
-                case "0" => new Get.Response.Fail(response)
-                case "1" => new Get.Response.Success(response.resultExtra, response)
+        override def send()(implicit handler: AgiHandler): Future[Get.Response] =
+            handler.send(this).map{
+                case response => response.resultCode match{
+                    case "0" => new Get.Response.Fail(response)
+                    case "1" => new Get.Response.Success(response.resultExtra, response)
+                }
             }
-        } yield result
     }
 
     object Get{
         def apply(family: String, key: String) = new Get(family, key)
 
-        sealed trait Response extends CustomAgiResponse
+        sealed trait Response extends AgiResponse
         object Response{
-            class Success(val value: String, source: AgiResponse) extends Response
-            class Fail(source: AgiResponse) extends Response
+            class Success(val value: String, source: AgiResponse) extends CustomAgiResponse(source) with Response
+            class Fail(source: AgiResponse) extends CustomAgiResponse(source) with Response
         }
     }
 

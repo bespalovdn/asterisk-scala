@@ -22,6 +22,7 @@ trait AgiRequestHandler
 
     def handle(request: AgiRequest): Future[Unit]
 
+    override def context: ChannelHandlerContext = impl.context
     override def send(command: AgiCommand): Future[AgiResponse] = impl.agiCommandResponseChannelHandler.send(command)
 
     def recovery: PartialFunction[Throwable, Future[Unit]] = {
@@ -32,8 +33,6 @@ trait AgiRequestHandler
     def initializeChannel(channel: Channel) {
         impl.initialBuilder.build(channel.pipeline())
     }
-
-    override def context: ChannelHandlerContext = impl.context
 
     private object impl extends ChannelHandlerContextHolder with PipelineBuilderFactory
     {

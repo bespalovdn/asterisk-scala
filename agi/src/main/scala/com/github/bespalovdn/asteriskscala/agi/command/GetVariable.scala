@@ -20,22 +20,22 @@ class GetVariable private (val variable: String) extends AgiCommand with AsyncAc
         "GET VARIABLE " + variable.escaped
     }
 
-    override def send()(implicit handler: AgiHandler): Future[GetVariable.Response] = for {
-        response <- handler send this
-        result <- response.resultCode match {
-            case "0" => new GetVariable.Response.NotSet(response)
-            case "1" => new GetVariable.Response.Success(response.resultExtra, response)
+    override def send()(implicit handler: AgiHandler): Future[GetVariable.Response] =
+        handler.send(this).map{
+            case response => response.resultCode match {
+                case "0" => new GetVariable.Response.NotSet(response)
+                case "1" => new GetVariable.Response.Success(response.resultExtra, response)
+            }
         }
-    } yield result
 }
 
 object GetVariable
 {
     def apply(variable: String) = new GetVariable(variable)
 
-    sealed trait Response extends CustomAgiResponse
+    sealed trait Response extends AgiResponse
     object Response{
-        class Success(val value: String, source: AgiResponse) extends Response
-        class NotSet(source: AgiResponse) extends Response
+        class Success(val value: String, source: AgiResponse) extends CustomAgiResponse(source) with Response
+        class NotSet(source: AgiResponse) extends CustomAgiResponse(source) with Response
     }
 }

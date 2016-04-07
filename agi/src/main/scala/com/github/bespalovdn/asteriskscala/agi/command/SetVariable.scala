@@ -1,5 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
+import com.github.bespalovdn.asteriskscala.common.protocol.AsteriskFormatter
+
 /**
  * Sets AGI variable for the current context.
  * [[http://www.voip-info.org/wiki/view/set+variable]]
@@ -8,7 +10,10 @@ package com.github.bespalovdn.asteriskscala.agi.command
  */
 class SetVariable private (val name: String, val value: String) extends AgiCommand
 {
-    override def toString: String = "SET VARIABLE %s %s".format(name.escaped, value.escaped)
+    override def toString: String = {
+        import AsteriskFormatter._
+        "SET VARIABLE %s %s" format (name.escaped, value.escaped)
+    }
 }
 
 object SetVariable

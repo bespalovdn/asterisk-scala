@@ -1,5 +1,7 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
+import com.github.bespalovdn.asteriskscala.common.protocol.AsteriskFormatter
+
 /**
  * Executes an application with given options.
  * [[http://www.voip-info.org/wiki/view/exec]]
@@ -8,7 +10,10 @@ package com.github.bespalovdn.asteriskscala.agi.command
  */
 class Exec private (val application: String, val options: Seq[String]) extends AgiCommand
 {
-    override def toString: String = "EXEC %s %s".format(application.escaped, options.escaped)
+    override def toString: String = {
+        import AsteriskFormatter._
+        "EXEC %s %s".format(application.escaped, options.escaped)
+    }
 }
 
 object Exec

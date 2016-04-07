@@ -8,4 +8,6 @@ import scala.concurrent.Future
 trait AgiHandler
 {
     def send(command: AgiCommand): Future[AgiResponse]
+
+    protected implicit def _ah: AgiHandler = this
 }
