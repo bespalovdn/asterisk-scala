@@ -23,14 +23,14 @@ class ChannelStatus private (val channel: Option[String]) extends AgiCommand wit
         handler.send(this) map toResult
 
     private def toResult(response: AgiResponse): ChannelStatusResponse = response.resultCode match {
-        case "0" => ChannelStatusResponse.ChannelDownAndAvailable
-        case "1" => ChannelStatusResponse.ChannelDownButReserved
-        case "2" => ChannelStatusResponse.ChannelIsOffHook
-        case "3" => ChannelStatusResponse.DigitsBeenDialed
-        case "4" => ChannelStatusResponse.LineIsRinging
-        case "5" => ChannelStatusResponse.RemoteIsRinging
-        case "6" => ChannelStatusResponse.LineIsUp
-        case "7" => ChannelStatusResponse.LineIsBusy
+        case "0" => new ChannelStatusResponse.ChannelDownAndAvailable(response)
+        case "1" => new ChannelStatusResponse.ChannelDownButReserved(response)
+        case "2" => new ChannelStatusResponse.ChannelIsOffHook(response)
+        case "3" => new ChannelStatusResponse.DigitsBeenDialed(response)
+        case "4" => new ChannelStatusResponse.LineIsRinging(response)
+        case "5" => new ChannelStatusResponse.RemoteIsRinging(response)
+        case "6" => new ChannelStatusResponse.LineIsUp(response)
+        case "7" => new ChannelStatusResponse.LineIsBusy(response)
         case other => throw new RuntimeException("Unexpected channel status: " + other)
     }
 }

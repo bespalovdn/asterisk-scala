@@ -2,8 +2,8 @@ package com.github.bespalovdn.asteriskscala.agi.command.response
 
 trait AgiResponse
 {
-    def resultCode: String = ""
-    def resultExtra: String = ""
+    def resultCode: String
+    def resultExtra: String
 
     override def toString = s"${getClass.getSimpleName}: resultCode=[$resultCode] resultExtra=[$resultExtra]"
 }
@@ -37,10 +37,18 @@ object AgiResponse
     class InvalidAgiResponseException(line: String) extends RuntimeException("Unexpected AGI response: " + line)
 }
 
-trait FailResponse extends Throwable with AgiResponse
+trait FailResponse extends Throwable with AgiResponse{
+    override def resultCode: String = ""
+    override def resultExtra: String = ""
+}
 object FailResponse
 {
     case object InvalidCommand extends Exception("Invalid command.") with FailResponse
     case object ChannelIsDead extends Exception("Channel is dead.") with FailResponse
     case object InvalidSyntax extends Exception("Invalid command syntax.") with FailResponse
+}
+
+abstract class CustomAgiResponse(source: AgiResponse) extends AgiResponse{
+    override def resultCode: String = source.resultCode
+    override def resultExtra: String = source.resultExtra
 }

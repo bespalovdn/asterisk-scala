@@ -1,6 +1,6 @@
 package com.github.bespalovdn.asteriskscala.agi.command
 
-import com.github.bespalovdn.asteriskscala.agi.command.response.{AgiResponse, DatabaseGetResponse}
+import com.github.bespalovdn.asteriskscala.agi.command.response.{AgiResponse, CustomAgiResponse}
 import com.github.bespalovdn.asteriskscala.agi.execution.AsyncAction
 import com.github.bespalovdn.asteriskscala.agi.handler.AgiHandler
 import com.github.bespalovdn.asteriskscala.common.protocol.AsteriskFormatter
@@ -58,24 +58,19 @@ object Database
         override def send()(implicit handler: AgiHandler): Future[Get.Response] = for{
             response: AgiResponse <- handler send this
             result <- response.resultCode match {
-                case "0" => None
-                case "1" => Some(response.resultExtra)
+                case "0" => new Get.Response.Fail(response)
+                case "1" => new Get.Response.Success(response.resultExtra, response)
             }
-        } yield ???
-
-        private def convert(response: AgiResponse): AgiResponse with Option[String] = response.resultCode match {
-            case "0" => None with AgiResponse
-            case "1" => DatabaseGetResponse.Some(response.resultExtra)(response)
-        }
+        } yield result
     }
 
     object Get{
         def apply(family: String, key: String) = new Get(family, key)
 
-        sealed trait Response extends AgiResponse
+        sealed trait Response extends CustomAgiResponse
         object Response{
-            case class Success(value: String) extends Response
-            case object Fail extends Response
+            class Success(val value: String, source: AgiResponse) extends Response
+            class Fail(source: AgiResponse) extends Response
         }
     }
 
