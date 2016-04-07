@@ -23,10 +23,12 @@ object Database
             "DATABASE DEL %s %s".format(family.escaped, key.escaped)
         }
     }
+
     object Del {
         def apply(family: String, key: String) = new Del(family, key)
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Deletes a family or specific keytree withing a family in the Asterisk database.
      * [[http://www.voip-info.org/wiki/view/database+deltree]]
@@ -37,10 +39,12 @@ object Database
             "DATABASE DELTREE " + family.escaped + keytree.map(" " + _.escaped).getOrElse("")
         }
     }
+
     object Deltree{
         def apply(family: String, keytree: String = null) = new Deltree(family, Option(keytree))
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Retrieves an entry in the Asterisk database for a given family and key.
      * [[http://www.voip-info.org/wiki/view/database+get]]
@@ -51,7 +55,7 @@ object Database
             "DATABASE GET %s %s" format (family.escaped, key.escaped)
         }
 
-        override def send()(implicit handler: AgiHandler): Future[AgiResponse with Option[String]] = for{
+        override def send()(implicit handler: AgiHandler): Future[Get.Response] = for{
             response: AgiResponse <- handler send this
             result <- response.resultCode match {
                 case "0" => None
@@ -64,10 +68,18 @@ object Database
             case "1" => DatabaseGetResponse.Some(response.resultExtra)(response)
         }
     }
+
     object Get{
         def apply(family: String, key: String) = new Get(family, key)
+
+        sealed trait Response extends AgiResponse
+        object Response{
+            case class Success(value: String) extends Response
+            case object Fail extends Response
+        }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Adds or updates an entry in the Asterisk database for a given family, key, and value.
      * [[http://www.voip-info.org/wiki/view/database+put]]
@@ -87,5 +99,6 @@ object Database
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
     class DatabaseUpdateException(cause: String) extends RuntimeException(cause)
 }
