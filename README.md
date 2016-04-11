@@ -9,10 +9,10 @@ It designed to handle thousands concurrent AGI/AMI requests simultaneously.
 
 ## Milestones: 
 
-* _AGI_ + UT _(in progress)_
-* AMI + UT
-* _Documentation_ _(in progress)_
-* Uploading to central storage
+* AGI + UT (in progress)
+* AMI + UT (not started)
+* Documentation (in progress)
+* Uploading to central storage (not started)
 
 # AGI
 

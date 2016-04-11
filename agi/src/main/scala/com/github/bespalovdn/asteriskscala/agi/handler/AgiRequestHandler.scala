@@ -34,6 +34,8 @@ trait AgiRequestHandler
         impl.initialBuilder.build(channel.pipeline())
     }
 
+    protected implicit def _ah: AgiHandler = this
+
     private object impl extends ChannelHandlerContextHolder with PipelineBuilderFactory
     {
         override lazy val agiRequestChannelHandler = new AgiRequestChannelHandler with LoggerProxy {
