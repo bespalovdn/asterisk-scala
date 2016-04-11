@@ -19,7 +19,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
     with FutureConversions
     with StaticLogger
 {
-    def run(): LifeTime = {
+    def run(): LifeCycle = {
         logger.info("Starting server on %s...".format(bindAddr))
 
         val parentGroup: EventLoopGroup = new NioEventLoopGroup
@@ -49,13 +49,13 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
         def cleanup(): Future[Unit] = {
             val f1 = parentGroup.shutdownGracefully().asScala
             val f2 = childGroup.shutdownGracefully().asScala
-            val cleanup = f1 >> f2
-            cleanup onComplete {_ => logger.info("Server stopped.")}
-            cleanup
+            val fCleanup = f1 >> f2
+            fCleanup onComplete {_ => logger.info("Server stopped.")}
+            fCleanup
         }
-        val lifetime = new LifeTime(channelPromise.future, cleanup)
-        lifetime.started onComplete {_ => logger.info("Server started.")}
-        lifetime
+        val lifeCycle = new LifeCycle(channelPromise.future, cleanup)
+        lifeCycle.started >> Future{logger.info("Server started.")}
+        lifeCycle
     }
 
     /**
@@ -64,17 +64,19 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
      * @param channel Represents connection channel in terms of Netty.
      * @param cleanup The cleanup function, which should be called when channel is closed.
      */
-    class LifeTime(channel: Future[Channel], cleanup: () => Future[Unit])
+    class LifeCycle(channel: Future[Channel], cleanup: () => Future[Unit])
     {
+        private lazy val stopRequest: Future[Unit] = (channel >>= {_.close().asScala}) >> stopped
+
         /**
          * Returns `started` future, which completes when server started.
          */
-        val started: Future[Unit] = channel >> ().point[Future]
+        lazy val started: Future[Unit] = channel >> ().point[Future]
 
         /**
          * Returns `stopped` future, which completes when server stopped.
          */
-        val stopped: Future[Unit] = {channel >>= {_.closeFuture().asScala}}
+        lazy val stopped: Future[Unit] = channel >>= {_.closeFuture().asScala}
 
         // schedule cleanup:
         stopped onComplete {_ => cleanup()}
@@ -84,6 +86,6 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
  *
          * @return Future which completes when server stopped.
          */
-        def stop(): Future[Unit] = (channel >>= {_.close().asScala}) >> stopped
+        def stop(): Future[Unit] = stopRequest
     }
 }

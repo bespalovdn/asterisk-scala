@@ -17,7 +17,7 @@ class AgiServerActor (bindAddr: InetSocketAddress,
     with StaticLogger
     with AsyncAction
 {
-    var lifetime: AgiServer#LifeTime = null
+    var lifetime: AgiServer#LifeCycle = null
     var stopped = false
 
     override def preStart(): Unit = {
