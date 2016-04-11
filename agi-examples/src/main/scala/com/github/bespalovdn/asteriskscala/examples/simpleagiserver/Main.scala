@@ -18,8 +18,8 @@ object Main
         // create the AgiServer instance
         val server = new AgiServer(agiBindAddr, new AgiHandlerFactory)
         // run the server
-        val lifetime = server.run()
+        val lifeCycle = server.run()
         // wait until server stopped
-        Await.ready(lifetime.stopped, Duration.Inf)
+        Await.ready(lifeCycle.stopped, Duration.Inf)
     }
 }

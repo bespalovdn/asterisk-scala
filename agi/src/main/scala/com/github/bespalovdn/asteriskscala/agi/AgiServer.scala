@@ -71,7 +71,7 @@ class AgiServer(bindAddr: InetSocketAddress, handlerFactory: AgiRequestHandlerFa
         /**
          * Returns `started` future, which completes when server started.
          */
-        lazy val started: Future[Unit] = channel >> ().point[Future]
+        lazy val started: Future[Unit] = channel
 
         /**
          * Returns `stopped` future, which completes when server stopped.
