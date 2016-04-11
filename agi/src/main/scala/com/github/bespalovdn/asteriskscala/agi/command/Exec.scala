@@ -19,4 +19,6 @@ class Exec private (val application: String, val options: Seq[String]) extends A
 object Exec
 {
     def apply(application: String, options: String*) = new Exec(application, options)
+
+    def apply(application: String, options: Traversable[String]) = new Exec(application, options.toSeq)
 }

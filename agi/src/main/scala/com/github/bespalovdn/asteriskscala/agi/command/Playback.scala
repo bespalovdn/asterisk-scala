@@ -14,5 +14,5 @@ object Playback
     }
 
     def apply(file: String, options: Set[Option] = Set.empty): AgiCommand =
-        Exec("Playback", file, options.mkString(","))
+        Exec("Playback", file :: options.toList.map(_.toString))
 }
